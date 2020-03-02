@@ -3,7 +3,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.HomePage">
    <children>
       <BorderPane layoutX="-1.0" layoutY="-1.0" prefHeight="400.0" prefWidth="600.0">
@@ -14,7 +13,7 @@
             <HBox prefHeight="42.0" prefWidth="600.0" style="-fx-background-color: #87cefa;" BorderPane.alignment="CENTER" />
          </bottom>
          <center>
-            <TabPane prefHeight="249.0" prefWidth="600.0" style="-fx-background-color: #000080;" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+            <TabPane fx:id="tabPane" prefHeight="249.0" prefWidth="600.0" style="-fx-background-color: #000080;" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
               <tabs>
                 <Tab id="passwordManagerTab" fx:id="passwordManagerTab" style="-fx-background-color: white;" text="Password Manager">
                   <content>
@@ -23,7 +22,11 @@
                 </Tab>
                 <Tab id="fileManagerTab" fx:id="fileManagerTab" style="-fx-background-color: white;" text="File Management">
                   <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="268.0" prefWidth="600.0" style="-fx-background-color: #ffffff;" />
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="268.0" prefWidth="600.0" style="-fx-background-color: #ffffff;">
+                           <children>
+                              <Button fx:id="encryptBtn" layoutX="81.0" layoutY="119.0" mnemonicParsing="false" onAction="#encryptFile" text="Encrypt file" />
+                              <Button fx:id="decryptBtn" layoutX="386.0" layoutY="119.0" mnemonicParsing="false" onAction="#decryptFile" text="Decrypt file" />
+                           </children></AnchorPane>
                   </content>
                 </Tab>
               </tabs>

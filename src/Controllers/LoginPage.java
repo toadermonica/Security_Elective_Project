@@ -27,7 +27,6 @@ public class LoginPage implements Initializable {
     public void logInBtnAction(ActionEvent actionEvent) throws IOException {
         Parent homePageRoot = FXMLLoader.load(getClass().getClassLoader().getResource("Views/HomePage.fxml"));
         Scene scene = ((Node) actionEvent.getSource()).getScene();
-
         if (isValidUserLogIn())
         {
             scene.setRoot(homePageRoot);
