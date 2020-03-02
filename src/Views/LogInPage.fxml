@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.LoginPage">
+   <children>
+      <Button fx:id="logInBtn" contentDisplay="CENTER" defaultButton="true" layoutX="213.0" layoutY="200.0" mnemonicParsing="false" onAction="#logInBtnAction" style="-fx-background-color: #87cefa;" text="Sign In" textFill="WHITE">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button fx:id="signUpBtn" layoutX="271.0" layoutY="200.0" mnemonicParsing="false" onAction="#signUpBtnAction" style="-fx-background-color: #87cefa;" text="Sign Up" textFill="WHITE">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Label contentDisplay="CENTER" layoutX="148.0" layoutY="120.0" text="Username" />
+      <Label contentDisplay="CENTER" layoutX="148.0" layoutY="151.0" text="Password" />
+      <PasswordField fx:id="passwordField" layoutX="213.0" layoutY="147.0" promptText="password" />
+      <TextField fx:id="usernameField" layoutX="213.0" layoutY="116.0" promptText="username" />
+      <Label layoutX="213.0" layoutY="38.0" prefHeight="17.0" prefWidth="149.0" text="Please authenticate yourself" />
+   </children>
+</Pane>
