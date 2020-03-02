@@ -18,7 +18,7 @@
       </Button>
       <Label contentDisplay="CENTER" layoutX="148.0" layoutY="120.0" text="Username" />
       <Label contentDisplay="CENTER" layoutX="148.0" layoutY="151.0" text="Password" />
-      <PasswordField fx:id="passwordField" layoutX="213.0" layoutY="147.0" promptText="password" />
+      <PasswordField fx:id="passwordField" layoutX="213.0" layoutY="147.0" promptText="passwords" />
       <TextField fx:id="usernameField" layoutX="213.0" layoutY="116.0" promptText="username" />
       <Label layoutX="213.0" layoutY="38.0" prefHeight="17.0" prefWidth="149.0" text="Please authenticate yourself" />
    </children>
