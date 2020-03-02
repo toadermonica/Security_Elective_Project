@@ -20,6 +20,18 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Security;
 import java.util.ResourceBundle;
+import Models.UserFiles;
+import Utils.JsonFileHandler;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
 
 public class HomePage implements Initializable {
     @FXML
@@ -28,11 +40,28 @@ public class HomePage implements Initializable {
     private Button encryptBtn;
     @FXML
     private Button decryptBtn;
+    ObservableList<String> fileList = FXCollections.observableArrayList();
+
+    @FXML
+    private ComboBox<String> comboBoxFileSelector;
+    @FXML private Label selectedFileLable;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-//        SingleSelectionModel<Tab> selectionModel = tabPane.getSelectionModel();
+        //        SingleSelectionModel<Tab> selectionModel = tabPane.getSelectionModel();
 //        selectionModel.select(1);
+        populateUIFileList();
+        comboBoxFileSelector.setItems(fileList);
+    }
+
+    public void getComboBoxItem(ActionEvent event) {
+        selectedFileLable.setText(comboBoxFileSelector.getValue());
+    }
+
+    private void populateUIFileList(){
+        JsonFileHandler jsFileHandler = new JsonFileHandler();
+        List<UserFiles> files = jsFileHandler.ReadObjectsFromJsonFile();
+        files.forEach(file -> fileList.add(file.getName()));
     }
 
     public void encryptFile(ActionEvent actionEvent) throws IOException {
@@ -155,4 +184,5 @@ public class HomePage implements Initializable {
         // TODO String mainName = fileName.split(“[.]”)[0];
         // String outFile = dir + "/" + mainName + "." + "decrypted" + "." + "pdf"; Utils.FileUtils.write(outFile, output);
     }
+
 }
