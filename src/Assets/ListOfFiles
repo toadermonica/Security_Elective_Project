@@ -1,0 +1,32 @@
+[
+  {
+    "name": "File1",
+    "Location": "God Knows If We Need this",
+    "Status":"Encrypted",
+    "Secret": ""
+  },
+  {
+    "name": "File2",
+    "Location": "God Knows If We Need this",
+    "Status":"Encrypted",
+    "Secret": ""
+  },
+  {
+    "name": "File3",
+    "Location": "God Knows If We Need this",
+    "Status":"Encrypted",
+    "Secret": ""
+  },
+  {
+    "name": "File4",
+    "Location": "God Knows If We Need this",
+    "Status":"Encrypted",
+    "Secret": ""
+  },
+  {
+    "name": "Cristi",
+    "Location": "God Knows If We Need this",
+    "Status":"Encrypted",
+    "Secret": ""
+  }
+]
