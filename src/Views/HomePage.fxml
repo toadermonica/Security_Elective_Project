@@ -3,6 +3,7 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.HomePage">
     <children>
@@ -63,8 +64,30 @@
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="268.0" prefWidth="600.0" style="-fx-background-color: #ffffff;">
                            <children>
-                              <Button fx:id="encryptBtn" layoutX="81.0" layoutY="119.0" mnemonicParsing="false" onAction="#encryptFile" text="Encrypt file" />
-                              <Button fx:id="decryptBtn" layoutX="386.0" layoutY="119.0" mnemonicParsing="false" onAction="#decryptFile" text="Decrypt file" />
+                              <Button fx:id="encryptBtn" layoutX="29.0" layoutY="42.0" mnemonicParsing="false" onAction="#encryptFile" text="Encrypt file" />
+                              <Button fx:id="decryptBtn" layoutX="117.0" layoutY="42.0" mnemonicParsing="false" onAction="#decryptFile" text="Decrypt file" />
+                              <Label layoutX="29.0" layoutY="14.0" text="File Encryption Section" underline="true">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="29.0" layoutY="95.0" text="File Signature Section" underline="true">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <ComboBox fx:id="comboBox_unsignedFile" layoutX="43.0" layoutY="150.0" prefHeight="25.0" prefWidth="167.0" promptText="Select encrypted file" />
+                              <Label layoutX="43.0" layoutY="189.0" text="Validate signature">
+                                 <font>
+                                    <Font size="13.0" />
+                                 </font>
+                              </Label>
+                              <ComboBox fx:id="comboBox_checkSignatureValidation" layoutX="43.0" layoutY="213.0" prefHeight="25.0" prefWidth="168.0" promptText="Select file for validation" />
+                              <Label layoutX="42.0" layoutY="125.0" text="Sign files">
+                                 <font>
+                                    <Font size="13.0" />
+                                 </font>
+                              </Label>
                            </children></AnchorPane>
                   </content>
                 </Tab>

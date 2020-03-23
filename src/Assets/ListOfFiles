@@ -3,30 +3,35 @@
     "name": "File1",
     "Location": "God Knows If We Need this",
     "Status":"Encrypted",
-    "Secret": ""
+    "Secret": "",
+    "Signed" : false
   },
   {
     "name": "File2",
     "Location": "God Knows If We Need this",
     "Status":"Encrypted",
-    "Secret": ""
+    "Secret": "",
+    "Signed" : false
   },
   {
     "name": "File3",
     "Location": "God Knows If We Need this",
     "Status":"Encrypted",
-    "Secret": ""
+    "Secret": "",
+    "Signed" : false
   },
   {
     "name": "File4",
     "Location": "God Knows If We Need this",
     "Status":"Encrypted",
-    "Secret": ""
+    "Secret": "",
+    "Signed" : false
   },
   {
     "name": "Cristi",
     "Location": "God Knows If We Need this",
     "Status":"Encrypted",
-    "Secret": ""
+    "Secret": "",
+    "Signed" : false
   }
 ]
