@@ -48,7 +48,7 @@ public class HomePage implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //        SingleSelectionModel<Tab> selectionModel = tabPane.getSelectionModel();
+//        SingleSelectionModel<Tab> selectionModel = tabPane.getSelectionModel();
 //        selectionModel.select(1);
         populateUIFileList();
         comboBoxFileSelector.setItems(fileList);
@@ -78,6 +78,7 @@ public class HomePage implements Initializable {
             System.out.println(fileValue);
             try {
                 HomePage.encrypt(fileValue, file.getName());
+                file.delete();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -158,7 +159,7 @@ public class HomePage implements Initializable {
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
         System.out.println("Current relative path is: " + s);
-        FileUtils.write(s + "/src/assets/" + fileNameFormatted + "." + ivString + "." + "aes", output);
+        FileUtils.write(s + "/src/assets/" + fileNameFormatted + "encrypted." + ivString + "." + "aes", output);
     }
 
     private static void decrypt(String value, String fileName) throws Exception{
@@ -181,8 +182,12 @@ public class HomePage implements Initializable {
         cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
         byte[] output = cipher.doFinal(input);
         System.out.println("OUTPUT: " + new String(output));
+
         // TODO String mainName = fileName.split(“[.]”)[0];
         // String outFile = dir + "/" + mainName + "." + "decrypted" + "." + "pdf"; Utils.FileUtils.write(outFile, output);
+
+        System.out.println("Current relative path is: " + s);
+        FileUtils.write(s + "/src/assets/"  + "decrypted." + ivString + "." + "aes", output);
     }
 
 }
