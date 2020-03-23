@@ -15,6 +15,7 @@
 .idea/**/shelf
 .DS_Store
 
+
 # Generated files
 .idea/**/contentModel.xml
 
@@ -106,7 +107,7 @@ fabric.properties
 .mtj.tmp/
 
 # Package Files #
-*.jar
+#*.jar
 *.war
 *.nar
 *.ear
@@ -116,5 +117,7 @@ fabric.properties
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+.DS_Store
 
 # End of https://www.gitignore.io/api/java,intellij
