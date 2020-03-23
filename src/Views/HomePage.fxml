@@ -76,13 +76,13 @@
                                     <Font size="14.0" />
                                  </font>
                               </Label>
-                              <ComboBox fx:id="comboBox_unsignedFile" layoutX="43.0" layoutY="150.0" prefHeight="25.0" prefWidth="167.0" promptText="Select encrypted file" />
+                              <ComboBox fx:id="comboBox_unsignedFile" layoutX="43.0" layoutY="150.0" onAction="#addFileSignature" prefHeight="25.0" prefWidth="167.0" promptText="Select encrypted file" />
                               <Label layoutX="43.0" layoutY="189.0" text="Validate signature">
                                  <font>
                                     <Font size="13.0" />
                                  </font>
                               </Label>
-                              <ComboBox fx:id="comboBox_checkSignatureValidation" layoutX="43.0" layoutY="213.0" prefHeight="25.0" prefWidth="168.0" promptText="Select file for validation" />
+                              <ComboBox fx:id="comboBox_checkSignatureValidation" layoutX="43.0" layoutY="213.0" onAction="#checkSignatureValidation" prefHeight="25.0" prefWidth="168.0" promptText="Select file for validation" />
                               <Label layoutX="42.0" layoutY="125.0" text="Sign files">
                                  <font>
                                     <Font size="13.0" />

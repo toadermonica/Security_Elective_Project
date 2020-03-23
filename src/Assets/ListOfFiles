@@ -2,36 +2,36 @@
   {
     "name": "File1",
     "Location": "God Knows If We Need this",
-    "Status":"Encrypted",
+    "status":"Encrypted",
     "Secret": "",
-    "Signed" : false
+    "signedStatus" : false
   },
   {
     "name": "File2",
     "Location": "God Knows If We Need this",
-    "Status":"Encrypted",
+    "status":"Encrypted",
     "Secret": "",
-    "Signed" : false
+    "signedStatus" : false
   },
   {
     "name": "File3",
     "Location": "God Knows If We Need this",
-    "Status":"Encrypted",
+    "status":"Encrypted",
     "Secret": "",
-    "Signed" : false
+    "signedStatus" : false
   },
   {
     "name": "File4",
     "Location": "God Knows If We Need this",
-    "Status":"Encrypted",
+    "status":"Encrypted",
     "Secret": "",
-    "Signed" : false
+    "signedStatus" : false
   },
   {
     "name": "Cristi",
     "Location": "God Knows If We Need this",
-    "Status":"Encrypted",
+    "status":"Encrypted",
     "Secret": "",
-    "Signed" : false
+    "signedStatus" : true
   }
 ]

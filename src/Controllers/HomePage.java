@@ -40,11 +40,13 @@ public class HomePage implements Initializable {
     private Button encryptBtn;
     @FXML
     private Button decryptBtn;
-    ObservableList<String> fileList, encryptedFileList, signedFileList = FXCollections.observableArrayList();
-
     @FXML
     private ComboBox<String> comboBoxFileSelector, comboBox_unsignedFile, comboBox_checkSignatureValidation;
     @FXML private Label selectedFileLable;
+
+    ObservableList<String> fileList = FXCollections.observableArrayList();
+    ObservableList<String> encryptedFileList = FXCollections.observableArrayList();
+    ObservableList<String> signedFileList = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -52,35 +54,38 @@ public class HomePage implements Initializable {
 //        selectionModel.select(1);
         populateUIFileList();
         comboBoxFileSelector.setItems(fileList);
+        comboBox_unsignedFile.setItems(encryptedFileList);
+        comboBox_checkSignatureValidation.setItems(signedFileList);
     }
 
-    public void getComboBoxItem(ActionEvent event) {
+    public void getComboBoxItem (ActionEvent event) {
         selectedFileLable.setText(comboBoxFileSelector.getValue());
     }
+    public void addFileSignature (ActionEvent event) {
+        System.out.println(comboBox_unsignedFile.getValue());
+    }
+    public void checkSignatureValidation(ActionEvent event){
+        System.out.println(comboBox_checkSignatureValidation.getValue());
+    }
+
     private void populateUIFileList(){
+        String itemStatus;
+        boolean itemSignatureStatus;
         JsonFileHandler jsFileHandler = new JsonFileHandler();
         List<UserFiles> files = jsFileHandler.ReadObjectsFromJsonFile();
         files.forEach(file -> fileList.add(file.getName()));
+        for(int i = 0; i < files.size(); i++){
+            itemStatus = files.get(i).getStatus();
+            itemSignatureStatus = files.get(i).getSignedStatus();
+            if (itemStatus.contentEquals("Encrypted")){
+                if(itemSignatureStatus == false){
+                    encryptedFileList.add(files.get(i).getName());
+                }else{
+                    signedFileList.add(files.get(i).getName());
+                }
+            }
+        }
     }
-//    private void populateUIFileList(){
-//        JsonFileHandler jsFileHandler = new JsonFileHandler();
-//        List<UserFiles> files = jsFileHandler.ReadObjectsFromJsonFile();
-//        files.forEach(file -> fileList.add(file.getName()));
-//
-////        files.forEach(file->{
-////            if(file.getStatus().equals("Encrypted")){
-////                encryptedFileList.add(file.getName());
-////            }
-//////            if(file.getStatus().equals("Encrypted") && file.getSignedStatus() == true){
-//////                signedFileList.add(file.getName());
-//////            }
-////            fileList.add(file.getName());
-////        });
-//
-//        comboBoxFileSelector.setItems(fileList);
-//        comboBox_unsignedFile.setItems(encryptedFileList);
-//        comboBox_checkSignatureValidation.setItems(signedFileList);
-//    }
 
     public void encryptFile(ActionEvent actionEvent) throws IOException {
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
