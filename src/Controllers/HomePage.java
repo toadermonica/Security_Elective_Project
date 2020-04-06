@@ -52,7 +52,7 @@ public class HomePage implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //        SingleSelectionModel<Tab> selectionModel = tabPane.getSelectionModel();
 //        selectionModel.select(1);
-        populateUIFileList();
+        //populateUIFileList();
         comboBoxFileSelector.setItems(fileList);
         comboBox_unsignedFile.setItems(encryptedFileList);
         comboBox_checkSignatureValidation.setItems(signedFileList);
@@ -155,6 +155,7 @@ public class HomePage implements Initializable {
 
 
     private static void encrypt(String value, String fileName) throws Exception{
+        System.out.println("File name in encryption is: "+fileName);
         String fileNameFormatted = fileName.substring(0, fileName.lastIndexOf('.'));
         System.out.println("file name is " + fileNameFormatted);
         Security.addProvider(new BouncyCastleProvider());
@@ -175,13 +176,17 @@ public class HomePage implements Initializable {
         byte[] output = cipher.doFinal(input);
 
         System.out.println("encrypted: " + Hex.toHexString(output));
-
         cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
 
         Path currentRelativePath = Paths.get("");
-        String s = currentRelativePath.toAbsolutePath().toString();
-        System.out.println("Current relative path is: " + s);
-        FileUtils.write(s + "/src/assets/" + fileNameFormatted + "." + ivString + "." + "aes", output);
+        String currentRelativePathString = currentRelativePath.toAbsolutePath().toString();
+        System.out.println("Current relative path is: " + currentRelativePathString);
+        FileUtils.write(currentRelativePathString + "/src/assets/" + fileNameFormatted + "." + ivString + "." + "aes", output);
+
+        /**
+         * Function that writes the name of the encrypted file in the JSON list of files -- need it for signing the file :)
+         */
+        addFileNameToList(fileName, currentRelativePathString, "Encrypted");
     }
 
     private static void decrypt(String value, String fileName) throws Exception{
@@ -206,6 +211,15 @@ public class HomePage implements Initializable {
         System.out.println("OUTPUT: " + new String(output));
         // TODO String mainName = fileName.split(“[.]”)[0];
         // String outFile = dir + "/" + mainName + "." + "decrypted" + "." + "pdf"; Utils.FileUtils.write(outFile, output);
+    }
+
+    private static void addFileNameToList(String fileName, String currentRelativePath, String status){
+        JsonFileHandler jsFileHandler = new JsonFileHandler();
+        UserFiles userFile = new UserFiles();
+        userFile.setName(fileName);
+        userFile.setLocation(currentRelativePath);
+        userFile.setStatus(status);
+        jsFileHandler.WriteObjectsToJsonFile(userFile);
     }
 
 }

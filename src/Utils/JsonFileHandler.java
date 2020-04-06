@@ -15,6 +15,11 @@ public class JsonFileHandler {
 
     public void WriteObjectsToJsonFile(UserFiles userFileItem){
         try {
+
+            // read the format of the file as a list -- this list will be updated with new writes
+            List<UserFiles> currentItemsInJsonFile = ReadObjectsFromJsonFile();
+            currentItemsInJsonFile.add(userFileItem);
+
             // create Gson instance
             Gson gson = new Gson();
 
@@ -22,7 +27,7 @@ public class JsonFileHandler {
             Writer writer = Files.newBufferedWriter(Paths.get(filePath));
 
             // convert user object to JSON file
-            gson.toJson(userFileItem, writer);
+            gson.toJson(currentItemsInJsonFile, writer);
 
             // close writer
             writer.close();
