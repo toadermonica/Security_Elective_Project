@@ -14,7 +14,7 @@
 .idea/**/dictionaries
 .idea/**/shelf
 .DS_Store
-.src/Assets
+.src/Assets/ListOfFiles
 
 
 # Generated files
