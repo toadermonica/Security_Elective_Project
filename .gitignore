@@ -16,6 +16,7 @@
 .DS_Store
 .src/Assets
 
+
 # Generated files
 .idea/**/contentModel.xml
 

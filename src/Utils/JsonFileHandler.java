@@ -13,7 +13,7 @@ import java.util.List;
 public class JsonFileHandler {
     private String filePath = "src/Assets/ListOfFiles";
 
-    public void WriteObjectsToJsonFile(UserFiles userFileItem){
+    public void WriteObjectsToJsonFile(List<UserFiles> userFileItem){
         try {
 
             // read the format of the file as a list -- this list will be updated with new writes

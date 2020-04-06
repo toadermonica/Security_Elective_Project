@@ -10,5 +10,7 @@
     <orderEntry type="library" name="bcprov-jdk15on-164" level="project" />
     <orderEntry type="library" name="gson-2.8.5" level="project" />
     <orderEntry type="library" name="bcprov-ext-jdk15to18-164" level="project" />
+    <orderEntry type="library" name="bcprov-ext-jdk15on-164" level="project" />
+    <orderEntry type="library" name="gson-2.8.5" level="project" />
   </component>
 </module>

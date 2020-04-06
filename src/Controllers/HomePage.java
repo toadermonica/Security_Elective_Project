@@ -18,6 +18,7 @@ import java.io.*;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.SecureRandom;
 import java.security.Security;
 import java.util.ResourceBundle;
 import Models.UserFiles;
@@ -41,6 +42,11 @@ public class HomePage implements Initializable {
     @FXML
     private Button decryptBtn;
     @FXML
+    private TextArea showSecret;
+    @FXML
+    private TextField secretkeyInput;
+
+    @FXML
     private ComboBox<String> comboBoxFileSelector, comboBox_unsignedFile, comboBox_checkSignatureValidation;
     @FXML private Label selectedFileLable;
 
@@ -50,9 +56,9 @@ public class HomePage implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //        SingleSelectionModel<Tab> selectionModel = tabPane.getSelectionModel();
+//        SingleSelectionModel<Tab> selectionModel = tabPane.getSelectionModel();
 //        selectionModel.select(1);
-        //populateUIFileList();
+        populateUIFileList();
         comboBoxFileSelector.setItems(fileList);
         comboBox_unsignedFile.setItems(encryptedFileList);
         comboBox_checkSignatureValidation.setItems(signedFileList);
@@ -60,6 +66,15 @@ public class HomePage implements Initializable {
 
     public void getComboBoxItem (ActionEvent event) {
         selectedFileLable.setText(comboBoxFileSelector.getValue());
+        System.out.println(comboBoxFileSelector.getValue());
+        JsonFileHandler fh = new JsonFileHandler();
+
+        for (UserFiles item : fh.ReadObjectsFromJsonFile()) {
+            if(item.getName().equals(comboBoxFileSelector.getValue())){
+                showSecret.setText(item.getSecret());
+//                return;
+            }
+        }
     }
     public void addFileSignature (ActionEvent event) {
         System.out.println(comboBox_unsignedFile.getValue());
@@ -101,6 +116,7 @@ public class HomePage implements Initializable {
             System.out.println(fileValue);
             try {
                 HomePage.encrypt(fileValue, file.getName());
+//                file.delete();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -108,7 +124,6 @@ public class HomePage implements Initializable {
     }
 
     public void decryptFile(ActionEvent actionEvent) throws IOException {
-
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
@@ -121,7 +136,7 @@ public class HomePage implements Initializable {
             String fileValue = readFile(file);
             System.out.println(fileValue);
             try {
-                HomePage.decrypt(fileValue, file.getName());
+                this.decrypt(fileValue, file.getName());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -155,19 +170,22 @@ public class HomePage implements Initializable {
 
 
     private static void encrypt(String value, String fileName) throws Exception{
-        System.out.println("File name in encryption is: "+fileName);
         String fileNameFormatted = fileName.substring(0, fileName.lastIndexOf('.'));
         System.out.println("file name is " + fileNameFormatted);
         Security.addProvider(new BouncyCastleProvider());
 
-        byte[] keyBytes = Hex.decode("000102030405060708090a0b0c0d0e0f");
+       SecureRandom random = new SecureRandom();
+       byte[] keyBytes = new byte[16];
+       random.nextBytes(keyBytes);
+        // byte[] keyBytes = Hex.decode("000102030405060708090a0b0c0d0e0f");
+        SecretKeySpec key = new SecretKeySpec(keyBytes, "AES");
         String ivString = "9f741fdb5d8845bdb48a94394e84f8a3";
         byte[] iv = Hex.decode(ivString);
         byte[] input = value.getBytes();
 
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding", "BC");
 
-        SecretKeySpec key = new SecretKeySpec(keyBytes, "AES");
+//        SecretKeySpec key = new SecretKeySpec(keyBytes, "AES");
 
         System.out.println("input: " + new String(input));
 
@@ -176,23 +194,31 @@ public class HomePage implements Initializable {
         byte[] output = cipher.doFinal(input);
 
         System.out.println("encrypted: " + Hex.toHexString(output));
+
         cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
 
         Path currentRelativePath = Paths.get("");
-        String currentRelativePathString = currentRelativePath.toAbsolutePath().toString();
-        System.out.println("Current relative path is: " + currentRelativePathString);
-        FileUtils.write(currentRelativePathString + "/src/assets/" + fileNameFormatted + "." + ivString + "." + "aes", output);
+        String s = currentRelativePath.toAbsolutePath().toString();
+        System.out.println("Current relative path is: " + s);
+        String encryptedFileName = fileNameFormatted + ".encrypted." + ivString + "." + "aes";
+        FileUtils.write(s + "/src/assets/" + encryptedFileName, output);
 
-        /**
-         * Function that writes the name of the encrypted file in the JSON list of files -- need it for signing the file :)
-         */
-        addFileNameToList(fileName, currentRelativePathString, "Encrypted");
+        // write to ListOfFIles
+        JsonFileHandler fh = new JsonFileHandler();
+        List<UserFiles> objs = fh.ReadObjectsFromJsonFile();
+        UserFiles user = new UserFiles();
+        user.setName(encryptedFileName);
+        user.setSecret(Hex.toHexString(keyBytes));
+        user.setStatus("Encrypted");
+        objs.add(user);
+        fh.WriteObjectsToJsonFile(objs);
     }
 
-    private static void decrypt(String value, String fileName) throws Exception{
+    private void decrypt(String value, String fileName) throws Exception{
         Security.addProvider(new BouncyCastleProvider());
 
-        byte[] keyBytes = Hex.decode("000102030405060708090a0b0c0d0e0f");
+        byte[] keyBytes = Hex.decode(secretkeyInput.getText());
+
         String ivString = "9f741fdb5d8845bdb48a94394e84f8a3";
         byte[] iv = Hex.decode(ivString);
 
@@ -209,17 +235,14 @@ public class HomePage implements Initializable {
         cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
         byte[] output = cipher.doFinal(input);
         System.out.println("OUTPUT: " + new String(output));
-        // TODO String mainName = fileName.split(“[.]”)[0];
-        // String outFile = dir + "/" + mainName + "." + "decrypted" + "." + "pdf"; Utils.FileUtils.write(outFile, output);
-    }
 
-    private static void addFileNameToList(String fileName, String currentRelativePath, String status){
-        JsonFileHandler jsFileHandler = new JsonFileHandler();
-        UserFiles userFile = new UserFiles();
-        userFile.setName(fileName);
-        userFile.setLocation(currentRelativePath);
-        userFile.setStatus(status);
-        jsFileHandler.WriteObjectsToJsonFile(userFile);
+        // TODO
+        String mainName = fileName.split("\\.")[0];
+        System.out.println(mainName);
+        // String outFile = dir + "/" + mainName + "." + "decrypted" + "." + "pdf"; Utils.FileUtils.write(outFile, output);
+
+        System.out.println("Current relative path is: " + s);
+        FileUtils.write(s + "/src/assets/"  + mainName + ".decrypted." + ivString + "." + "aes", output);
     }
 
 }
