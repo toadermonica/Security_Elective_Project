@@ -1,6 +1,9 @@
 package Models;
 
 public class UserFiles {
+    String name, location, file, secret, status;
+    boolean signedStatus;
+
     public String getName() {
         return name;
     }
@@ -32,6 +35,19 @@ public class UserFiles {
     public void setSecret(String secret) {
         this.secret = secret;
     }
+    public String getStatus() {
+        return status;
+    }
 
-    String name, location, file, secret;
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public boolean getSignedStatus() {
+        return signedStatus;
+    }
+
+    public void setSignedStatus(boolean signedStatus) {
+        this.signedStatus = signedStatus;
+    }
 }

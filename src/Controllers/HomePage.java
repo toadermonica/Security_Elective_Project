@@ -48,10 +48,13 @@ public class HomePage implements Initializable {
 
     ObservableList<String> fileList = FXCollections.observableArrayList();
 
-
     @FXML
-    private ComboBox<String> comboBoxFileSelector;
+    private ComboBox<String> comboBoxFileSelector, comboBox_unsignedFile, comboBox_checkSignatureValidation;
     @FXML private Label selectedFileLable;
+
+    ObservableList<String> fileList = FXCollections.observableArrayList();
+    ObservableList<String> encryptedFileList = FXCollections.observableArrayList();
+    ObservableList<String> signedFileList = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -59,9 +62,11 @@ public class HomePage implements Initializable {
 //        selectionModel.select(1);
         populateUIFileList();
         comboBoxFileSelector.setItems(fileList);
+        comboBox_unsignedFile.setItems(encryptedFileList);
+        comboBox_checkSignatureValidation.setItems(signedFileList);
     }
 
-    public void getComboBoxItem(ActionEvent event) {
+    public void getComboBoxItem (ActionEvent event) {
         selectedFileLable.setText(comboBoxFileSelector.getValue());
         System.out.println(comboBoxFileSelector.getValue());
         JsonFileHandler fh = new JsonFileHandler();
@@ -73,12 +78,30 @@ public class HomePage implements Initializable {
             }
         }
     }
+    public void addFileSignature (ActionEvent event) {
+        System.out.println(comboBox_unsignedFile.getValue());
+    }
+    public void checkSignatureValidation(ActionEvent event){
+        System.out.println(comboBox_checkSignatureValidation.getValue());
+    }
 
     private void populateUIFileList(){
-//        System.out.println(fileList.get(0));
+        String itemStatus;
+        boolean itemSignatureStatus;
         JsonFileHandler jsFileHandler = new JsonFileHandler();
         List<UserFiles> files = jsFileHandler.ReadObjectsFromJsonFile();
         files.forEach(file -> fileList.add(file.getName()));
+        for(int i = 0; i < files.size(); i++){
+            itemStatus = files.get(i).getStatus();
+            itemSignatureStatus = files.get(i).getSignedStatus();
+            if (itemStatus.contentEquals("Encrypted")){
+                if(itemSignatureStatus == false){
+                    encryptedFileList.add(files.get(i).getName());
+                }else{
+                    signedFileList.add(files.get(i).getName());
+                }
+            }
+        }
     }
 
     public void encryptFile(ActionEvent actionEvent) throws IOException {
