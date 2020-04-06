@@ -46,8 +46,6 @@ public class HomePage implements Initializable {
     @FXML
     private TextField secretkeyInput;
 
-    ObservableList<String> fileList = FXCollections.observableArrayList();
-
     @FXML
     private ComboBox<String> comboBoxFileSelector, comboBox_unsignedFile, comboBox_checkSignatureValidation;
     @FXML private Label selectedFileLable;
@@ -176,12 +174,10 @@ public class HomePage implements Initializable {
         System.out.println("file name is " + fileNameFormatted);
         Security.addProvider(new BouncyCastleProvider());
 
-//        SecureRandom random = new SecureRandom();
-//        byte[] keyBytes = new byte[16];
-//        random.nextBytes(keyBytes);
-
-
-        byte[] keyBytes = Hex.decode("000102030405060708090a0b0c0d0e0f");
+       SecureRandom random = new SecureRandom();
+       byte[] keyBytes = new byte[16];
+       random.nextBytes(keyBytes);
+        // byte[] keyBytes = Hex.decode("000102030405060708090a0b0c0d0e0f");
         SecretKeySpec key = new SecretKeySpec(keyBytes, "AES");
         String ivString = "9f741fdb5d8845bdb48a94394e84f8a3";
         byte[] iv = Hex.decode(ivString);
@@ -213,6 +209,7 @@ public class HomePage implements Initializable {
         UserFiles user = new UserFiles();
         user.setName(encryptedFileName);
         user.setSecret(Hex.toHexString(keyBytes));
+        user.setStatus("Encrypted");
         objs.add(user);
         fh.WriteObjectsToJsonFile(objs);
     }
