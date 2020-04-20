@@ -1,5 +1,6 @@
 package Controllers;
 
+import Utils.EncryptDecrypt;
 import Utils.FileUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -53,11 +54,11 @@ public class HomePage implements Initializable {
     ObservableList<String> fileList = FXCollections.observableArrayList();
     ObservableList<String> encryptedFileList = FXCollections.observableArrayList();
     ObservableList<String> signedFileList = FXCollections.observableArrayList();
+    EncryptDecrypt encryptDecrypt = new EncryptDecrypt();
+    FileUtils fileUtils = new FileUtils();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-//        SingleSelectionModel<Tab> selectionModel = tabPane.getSelectionModel();
-//        selectionModel.select(1);
         populateUIFileList();
         comboBoxFileSelector.setItems(fileList);
         comboBox_unsignedFile.setItems(encryptedFileList);
@@ -72,7 +73,6 @@ public class HomePage implements Initializable {
         for (UserFiles item : fh.ReadObjectsFromJsonFile()) {
             if(item.getName().equals(comboBoxFileSelector.getValue())){
                 showSecret.setText(item.getSecret());
-//                return;
             }
         }
     }
@@ -112,10 +112,11 @@ public class HomePage implements Initializable {
         File file = fileChooser.showOpenDialog(stage);
         if(file != null){
 
-            String fileValue = readFile(file);
+            String fileValue = fileUtils.readFile(file);
             System.out.println(fileValue);
             try {
-                HomePage.encrypt(fileValue, file.getName());
+                encryptDecrypt.encrypt(fileValue, file.getName());
+                // NOTE uncomment this in production
 //                file.delete();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -133,116 +134,13 @@ public class HomePage implements Initializable {
         File file = fileChooser.showOpenDialog(stage);
         if(file != null){
 
-            String fileValue = readFile(file);
+            String fileValue = fileUtils.readFile(file);
             System.out.println(fileValue);
             try {
-                this.decrypt(fileValue, file.getName());
+                encryptDecrypt.decrypt(fileValue, file.getName(), secretkeyInput);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
-
-    private String readFile(File file){
-        StringBuilder stringBuffer = new StringBuilder();
-        BufferedReader bufferedReader = null;
-
-        try {
-            bufferedReader = new BufferedReader(new FileReader(file));
-
-            String text;
-            while ((text = bufferedReader.readLine()) != null) {
-                stringBuffer.append(text);
-            }
-        } catch (FileNotFoundException ex) {
-            System.out.println(ex);
-        } catch (IOException ex) {
-            System.out.println(ex);
-        } finally {
-            try {
-                bufferedReader.close();
-            } catch (IOException ex) {
-                System.out.println(ex);
-            }
-        }
-        return stringBuffer.toString();
-    }
-
-
-    private static void encrypt(String value, String fileName) throws Exception{
-        String fileNameFormatted = fileName.substring(0, fileName.lastIndexOf('.'));
-        System.out.println("file name is " + fileNameFormatted);
-        Security.addProvider(new BouncyCastleProvider());
-
-       SecureRandom random = new SecureRandom();
-       byte[] keyBytes = new byte[16];
-       random.nextBytes(keyBytes);
-        // byte[] keyBytes = Hex.decode("000102030405060708090a0b0c0d0e0f");
-        SecretKeySpec key = new SecretKeySpec(keyBytes, "AES");
-        String ivString = "9f741fdb5d8845bdb48a94394e84f8a3";
-        byte[] iv = Hex.decode(ivString);
-        byte[] input = value.getBytes();
-
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding", "BC");
-
-//        SecretKeySpec key = new SecretKeySpec(keyBytes, "AES");
-
-        System.out.println("input: " + new String(input));
-
-        cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(iv));
-
-        byte[] output = cipher.doFinal(input);
-
-        System.out.println("encrypted: " + Hex.toHexString(output));
-
-        cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
-
-        Path currentRelativePath = Paths.get("");
-        String s = currentRelativePath.toAbsolutePath().toString();
-        System.out.println("Current relative path is: " + s);
-        String encryptedFileName = fileNameFormatted + ".encrypted." + ivString + "." + "aes";
-        FileUtils.write(s + "/src/assets/" + encryptedFileName, output);
-
-        // write to ListOfFIles
-        JsonFileHandler fh = new JsonFileHandler();
-        List<UserFiles> objs = fh.ReadObjectsFromJsonFile();
-        UserFiles user = new UserFiles();
-        user.setName(encryptedFileName);
-        user.setSecret(Hex.toHexString(keyBytes));
-        user.setStatus("Encrypted");
-        objs.add(user);
-        fh.WriteObjectsToJsonFile(objs);
-    }
-
-    private void decrypt(String value, String fileName) throws Exception{
-        Security.addProvider(new BouncyCastleProvider());
-
-        byte[] keyBytes = Hex.decode(secretkeyInput.getText());
-
-        String ivString = "9f741fdb5d8845bdb48a94394e84f8a3";
-        byte[] iv = Hex.decode(ivString);
-
-        // reading
-        Path currentRelativePath = Paths.get("");
-        String s = currentRelativePath.toAbsolutePath().toString();
-        System.out.println("Current relative path is: " + s);
-        String inFile = s + "/src/assets/" + fileName;
-        byte[] input = FileUtils.readAllBytes(inFile);
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding", "BC");
-        SecretKeySpec key = new SecretKeySpec(keyBytes, "AES");
-
-        // TODO String ivString = getIV(fileName); // read the IV byte[] iv = Hex.decode(ivString);
-        cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
-        byte[] output = cipher.doFinal(input);
-        System.out.println("OUTPUT: " + new String(output));
-
-        // TODO
-        String mainName = fileName.split("\\.")[0];
-        System.out.println(mainName);
-        // String outFile = dir + "/" + mainName + "." + "decrypted" + "." + "pdf"; Utils.FileUtils.write(outFile, output);
-
-        System.out.println("Current relative path is: " + s);
-        FileUtils.write(s + "/src/assets/"  + mainName + ".decrypted." + ivString + "." + "aes", output);
-    }
-
 }
