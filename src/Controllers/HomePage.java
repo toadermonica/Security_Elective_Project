@@ -1,6 +1,6 @@
 package Controllers;
 
-import Utils.EncryptDecrypt;
+import Utils.DigitalSignatureProcessing;
 import Utils.FileUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -55,31 +55,27 @@ public class HomePage implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        populateUIFileList();
+//        SingleSelectionModel<Tab> selectionModel = tabPane.getSelectionModel();
+//        selectionModel.select(1);
+        populateAllUIFileList();
         comboBoxFileSelector.setItems(fileList);
         comboBox_unsignedFile.setItems(encryptedFileList);
         comboBox_checkSignatureValidation.setItems(signedFileList);
     }
 
-    public void getComboBoxItem (ActionEvent event) {
+    public void comboBoxEncryptedFileList(ActionEvent event) {
         selectedFileLable.setText(comboBoxFileSelector.getValue());
-        System.out.println(comboBoxFileSelector.getValue());
-        JsonFileHandler fh = new JsonFileHandler();
-
-        for (UserFiles item : fh.ReadObjectsFromJsonFile_ListOfFiles()) {
-            if(item.getName().equals(comboBoxFileSelector.getValue())){
-                showSecret.setText(item.getSecret());
-            }
-        }
     }
     public void addFileSignature (ActionEvent event) {
         System.out.println(comboBox_unsignedFile.getValue());
+        String unsignedEncryptedFileName = comboBox_unsignedFile.getValue();
+        DigitalSignatureProcessing.processDigitalSignature(unsignedEncryptedFileName);
     }
     public void checkSignatureValidation(ActionEvent event){
         System.out.println(comboBox_checkSignatureValidation.getValue());
     }
 
-    private void populateUIFileList(){
+    private void populateAllUIFileList(){
         String itemStatus;
         boolean itemSignatureStatus;
         JsonFileHandler jsFileHandler = new JsonFileHandler();
@@ -123,7 +119,9 @@ public class HomePage implements Initializable {
     public void decryptFile(ActionEvent actionEvent) throws IOException {
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         FileChooser fileChooser = new FileChooser();
+        File defaultDirectory = new File("src/Assets");
         fileChooser.setTitle("Open Resource File");
+        fileChooser.setInitialDirectory(defaultDirectory);
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("AES files (*.aes)", "*.aes");
         fileChooser.getExtensionFilters().add(extFilter);
 

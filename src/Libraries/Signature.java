@@ -4,20 +4,19 @@ import java.security.*;
 
 public class Signature {
 
-    public void addSignature(byte[]input, KeyPair keyPair){
-        //byte[] input = Hex.decode("a0a1a2a3a4a5a6a7a0a1a2a3a4a5a6a7a0a1a2a3a4a5a6a7a0a1a2a3a4a5a6a7");
-
+    public static byte[] addSignature(byte[]input, PrivateKey privateKey){
         try {
             java.security.Signature signature =
                     java.security.Signature.getInstance("SHA256withRSA", "BC");
-            signature.initSign(keyPair.getPrivate());
+            signature.initSign(privateKey);
             signature.update(input);
-            byte[] byteSign = signature.sign();
+            return signature.sign();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
-    public boolean verifySignature (KeyPair keyPair, byte[] byteSign){
+    public static boolean verifySignature (KeyPair keyPair, byte[] byteSign){
         byte[] input = Hex.decode("a0a1a2a3a4a5a6a7a0a1a2a3a4a5a6a7a0a1a2a3a4a5a6a7a0a1a2a3a4a5a6a7");
         byte[] inputModified = Hex.decode("a0a1a2a3a4a5a6a7");
         java.security.Signature verifier = null;

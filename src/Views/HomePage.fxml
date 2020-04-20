@@ -40,7 +40,7 @@
                                             <padding>
                                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                             </padding></Label>
-                                        <ComboBox fx:id="comboBoxFileSelector" layoutX="23.0" layoutY="51.0" onAction="#getComboBoxItem" prefHeight="25.0" prefWidth="280.0" promptText="Select the needed file" />
+                                        <ComboBox fx:id="comboBoxFileSelector" layoutX="23.0" layoutY="51.0" onAction="#comboBoxEncryptedFileList" prefHeight="25.0" prefWidth="280.0" promptText="Select the needed file" />
                                         <Label layoutX="399.0" layoutY="14.0" text="Selected File">
                                             <padding>
                                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
