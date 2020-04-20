@@ -4,9 +4,8 @@ import java.security.*;
 
 public class Signature {
 
-    public void addSignature(KeyPair keyPair){
-        byte[] input = Hex.decode("a0a1a2a3a4a5a6a7a0a1a2a3a4a5a6a7a0a1a2a3a4a5a6a7a0a1a2a3a4a5a6a7");
-        byte[] inputModified = Hex.decode("a0a1a2a3a4a5a6a7");
+    public void addSignature(byte[]input, KeyPair keyPair){
+        //byte[] input = Hex.decode("a0a1a2a3a4a5a6a7a0a1a2a3a4a5a6a7a0a1a2a3a4a5a6a7a0a1a2a3a4a5a6a7");
 
         try {
             java.security.Signature signature =

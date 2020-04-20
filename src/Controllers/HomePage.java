@@ -25,14 +25,10 @@ import Models.UserFiles;
 import Utils.JsonFileHandler;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import java.net.URL;
+
 import java.util.List;
-import java.util.ResourceBundle;
 
 public class HomePage implements Initializable {
     @FXML
@@ -69,7 +65,7 @@ public class HomePage implements Initializable {
         System.out.println(comboBoxFileSelector.getValue());
         JsonFileHandler fh = new JsonFileHandler();
 
-        for (UserFiles item : fh.ReadObjectsFromJsonFile()) {
+        for (UserFiles item : fh.ReadObjectsFromJsonFile_ListOfFiles()) {
             if(item.getName().equals(comboBoxFileSelector.getValue())){
                 showSecret.setText(item.getSecret());
 //                return;
@@ -87,7 +83,7 @@ public class HomePage implements Initializable {
         String itemStatus;
         boolean itemSignatureStatus;
         JsonFileHandler jsFileHandler = new JsonFileHandler();
-        List<UserFiles> files = jsFileHandler.ReadObjectsFromJsonFile();
+        List<UserFiles> files = jsFileHandler.ReadObjectsFromJsonFile_ListOfFiles();
         files.forEach(file -> fileList.add(file.getName()));
         for(int i = 0; i < files.size(); i++){
             itemStatus = files.get(i).getStatus();
@@ -205,13 +201,13 @@ public class HomePage implements Initializable {
 
         // write to ListOfFIles
         JsonFileHandler fh = new JsonFileHandler();
-        List<UserFiles> objs = fh.ReadObjectsFromJsonFile();
+        List<UserFiles> objs = fh.ReadObjectsFromJsonFile_ListOfFiles();
         UserFiles user = new UserFiles();
         user.setName(encryptedFileName);
         user.setSecret(Hex.toHexString(keyBytes));
         user.setStatus("Encrypted");
         objs.add(user);
-        fh.WriteObjectsToJsonFile(objs);
+        fh.WriteObjectsToJsonFile_ListOfFiles(objs);
     }
 
     private void decrypt(String value, String fileName) throws Exception{
