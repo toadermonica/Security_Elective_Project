@@ -13,7 +13,7 @@ import java.util.List;
 
 public class JsonFileHandler {
     private String filePath = "src/Assets/ListOfFiles";
-    private static String userFilePath = "src/Assets/UserRSAKeyFile";
+    private static String userFilePath = "src/CommonAssets/UserRSAKeyFile";
 
     public void WriteObjectsToJsonFile_ListOfFiles(List<UserFiles> userFileItem){
         try {
