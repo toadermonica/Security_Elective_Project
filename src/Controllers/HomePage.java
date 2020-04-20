@@ -1,6 +1,7 @@
 package Controllers;
 
 import Utils.DigitalSignatureProcessing;
+import Utils.EncryptDecrypt;
 import Utils.FileUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -65,6 +66,14 @@ public class HomePage implements Initializable {
 
     public void comboBoxEncryptedFileList(ActionEvent event) {
         selectedFileLable.setText(comboBoxFileSelector.getValue());
+        System.out.println(comboBoxFileSelector.getValue());
+        JsonFileHandler fh = new JsonFileHandler();
+
+        for (UserFiles item : fh.ReadObjectsFromJsonFile_ListOfFiles()) {
+            if(item.getName().equals(comboBoxFileSelector.getValue())){
+                showSecret.setText(item.getSecret());
+            }
+        }
     }
     public void addFileSignature (ActionEvent event) {
         System.out.println(comboBox_unsignedFile.getValue());

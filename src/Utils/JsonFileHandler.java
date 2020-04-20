@@ -59,7 +59,43 @@ public class JsonFileHandler {
 
    }
 
+    public List<UserFiles> ReadObjectsFromJsonFile() {
+        List<UserFiles> files = null;
+        try {
+            // create a reader
+            Reader reader = Files.newBufferedReader(Paths.get(filePath));
 
+            // convert JSON array to list of users
+            files = new Gson().fromJson(reader, new TypeToken<List<UserFiles>>() {
+            }.getType());
+
+            // close reader
+            reader.close();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return files;
+    }
+
+    public void WriteObjectsToJsonFile(List<UserFiles> userFileItem){
+        try {
+            // create Gson instance
+            Gson gson = new Gson();
+
+            // create a writer
+            Writer writer = Files.newBufferedWriter(Paths.get(filePath));
+
+            // convert user object to JSON file
+            gson.toJson(userFileItem, writer);
+
+            // close writer
+            writer.close();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
     private void WriteObjectsToJsonFile_ListOfFiles(List<UserFiles> currentItemsInJsonFile){
         try {
 
