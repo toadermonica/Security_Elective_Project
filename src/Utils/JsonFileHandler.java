@@ -15,11 +15,11 @@ public class JsonFileHandler {
     private String filePath = "src/Assets/ListOfFiles";
     private static String userFilePath = "src/CommonAssets/UserRSAKeyFile";
 
-    public void WriteObjectsToJsonFile_ListOfFiles(List<UserFiles> userFileItem){
+    public void WriteObjectsToJsonFile_ListOfFiles(UserFiles userFileItem){
         try {
 
             // read the format of the file as a list -- this list will be updated with new writes
-            List<UserFiles> currentItemsInJsonFile = ReadObjectsFromJsonFile();
+            List<UserFiles> currentItemsInJsonFile = ReadObjectsFromJsonFile_ListOfFiles();
             currentItemsInJsonFile.add(userFileItem);
 
             // create Gson instance
@@ -100,4 +100,6 @@ public class JsonFileHandler {
 
         return files;
     }
+
+
 }

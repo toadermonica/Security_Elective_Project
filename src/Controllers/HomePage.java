@@ -202,12 +202,12 @@ public class HomePage implements Initializable {
         // write to ListOfFIles
         JsonFileHandler fh = new JsonFileHandler();
         List<UserFiles> objs = fh.ReadObjectsFromJsonFile_ListOfFiles();
-        UserFiles user = new UserFiles();
-        user.setName(encryptedFileName);
-        user.setSecret(Hex.toHexString(keyBytes));
-        user.setStatus("Encrypted");
-        objs.add(user);
-        fh.WriteObjectsToJsonFile_ListOfFiles(objs);
+        UserFiles fileOfUser = new UserFiles();
+        fileOfUser.setName(encryptedFileName);
+        fileOfUser.setSecret(Hex.toHexString(keyBytes));
+        fileOfUser.setStatus("Encrypted");
+        objs.add(fileOfUser);
+        fh.WriteObjectsToJsonFile_ListOfFiles(fileOfUser);
     }
 
     private void decrypt(String value, String fileName) throws Exception{
