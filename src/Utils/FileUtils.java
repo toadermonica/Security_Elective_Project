@@ -1,8 +1,8 @@
 package Utils;
 
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.io.File;
 import java.util.ArrayList;
 
 public class FileUtils {
@@ -31,7 +31,32 @@ public class FileUtils {
     } catch (Exception e) {
       e.printStackTrace();
     }
-  } 
+  }
+
+  public String readFile(File file){
+    StringBuilder stringBuffer = new StringBuilder();
+    BufferedReader bufferedReader = null;
+
+    try {
+      bufferedReader = new BufferedReader(new FileReader(file));
+
+      String text;
+      while ((text = bufferedReader.readLine()) != null) {
+        stringBuffer.append(text);
+      }
+    } catch (FileNotFoundException ex) {
+      System.out.println(ex);
+    } catch (IOException ex) {
+      System.out.println(ex);
+    } finally {
+      try {
+        bufferedReader.close();
+      } catch (IOException ex) {
+        System.out.println(ex);
+      }
+    }
+    return stringBuffer.toString();
+  }
 
   // getAllFileNamesWithExt:
   // returns a list of all filenames (strings) in a directory
