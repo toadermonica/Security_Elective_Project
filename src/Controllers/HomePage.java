@@ -1,12 +1,14 @@
 package Controllers;
 
-import Utils.DigitalSignatureProcessing;
-import Utils.EncryptDecrypt;
-import Utils.FileUtils;
+import Models.User;
+import Utils.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -24,7 +26,6 @@ import java.security.SecureRandom;
 import java.security.Security;
 import java.util.ResourceBundle;
 import Models.UserFiles;
-import Utils.JsonFileHandler;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
@@ -43,10 +44,10 @@ public class HomePage implements Initializable {
     private TextArea showSecret;
     @FXML
     private TextField secretkeyInput;
-
     @FXML
     private ComboBox<String> comboBoxFileSelector, comboBox_unsignedFile, comboBox_checkSignatureValidation;
-    @FXML private Label selectedFileLable;
+    @FXML private Label selectedFileLabel;
+    @FXML public Label welcomeUserLabel;
 
     ObservableList<String> fileList = FXCollections.observableArrayList();
     ObservableList<String> encryptedFileList = FXCollections.observableArrayList();
@@ -58,6 +59,7 @@ public class HomePage implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 //        SingleSelectionModel<Tab> selectionModel = tabPane.getSelectionModel();
 //        selectionModel.select(1);
+        welcomeUserLabel.setText(getLoggedInUserName());
         populateAllUIFileList();
         comboBoxFileSelector.setItems(fileList);
         comboBox_unsignedFile.setItems(encryptedFileList);
@@ -65,7 +67,7 @@ public class HomePage implements Initializable {
     }
 
     public void comboBoxEncryptedFileList(ActionEvent event) {
-        selectedFileLable.setText(comboBoxFileSelector.getValue());
+        selectedFileLabel.setText(comboBoxFileSelector.getValue());
         System.out.println(comboBoxFileSelector.getValue());
         JsonFileHandler fh = new JsonFileHandler();
 
@@ -145,5 +147,29 @@ public class HomePage implements Initializable {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void userLogout(ActionEvent event) throws IOException {
+        System.out.println("User to be logged out: "+welcomeUserLabel.getText());
+        if(welcomeUserLabel.getText() == null){
+            return;
+        }
+        UserAuthentication userAuth = new UserAuthentication();
+        userAuth.LogOutUser(welcomeUserLabel.getText());
+        Parent logInPageRoot = FXMLLoader.load(getClass().getClassLoader().getResource("Views/LogInPage.fxml"));
+        Scene scene = ((Node) event.getSource()).getScene();
+        scene.setRoot(logInPageRoot);
+    }
+    private String getLoggedInUserName(){
+        JsonFileHandler jfh = new JsonFileHandler();
+        List<User> listOfAllSystemUsers = jfh.ReadObjectsFromJsonFile_UserRSAKeyFile();
+        for (int i = 0 ; i < listOfAllSystemUsers.size(); i++){
+            User userObj = listOfAllSystemUsers.get(i);
+            System.out.println("This is the logged in user: "+userObj.isLoggedIn());
+            if(userObj.isLoggedIn()){
+                return userObj.getUsername();
+            }
+        }
+        return null;
     }
 }

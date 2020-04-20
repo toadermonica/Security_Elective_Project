@@ -67,7 +67,8 @@ public class DigitalSignatureProcessing {
      */
     private static PrivateKey getUserPrivateKey(){
         //read users from file and find the logged in user true
-        List<User> listOfUsers = JsonFileHandler.ReadObjectsFromJsonFile_UserRSAKeyFile();
+        JsonFileHandler jfh = new JsonFileHandler();
+        List<User> listOfUsers = jfh.ReadObjectsFromJsonFile_UserRSAKeyFile();
         Object userPrivateKey = null;
         for(int i=0;i<listOfUsers.size();i++){
             if(listOfUsers.get(i).isLoggedIn()){

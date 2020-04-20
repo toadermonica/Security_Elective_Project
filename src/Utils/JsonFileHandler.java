@@ -137,7 +137,7 @@ public class JsonFileHandler {
 
         return files;
     }
-    public static void WriteObjectsToJsonFile_UserRSAKeyFile(List<User> userFileItem){
+    public void WriteObjectsToJsonFile_UserRSAKeyFile(List<User> userFileItem){
         try {
 
             GsonBuilder gsonBuilder = new GsonBuilder();
@@ -161,7 +161,7 @@ public class JsonFileHandler {
     /**
      * Reading json objects from file to be used in password manager combobox
      */
-    public static List<User> ReadObjectsFromJsonFile_UserRSAKeyFile(){
+    public List<User> ReadObjectsFromJsonFile_UserRSAKeyFile(){
         List<User> files = null;
         try {
             // create a reader
