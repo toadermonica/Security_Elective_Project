@@ -18,8 +18,9 @@ public class UserAuthentication {
     }
     private static Object[] CreateNewUser(String username, String password, List<User> usersList){
         Object[] signUpStatus = new Object[2];
+        int length = usersList.size();
         int count=0;
-        for (int i = 0; i < usersList.size(); i++){
+        for (int i = 0; i < length; i++){
             String userNameFromList = usersList.get(i).getUsername();
             if (userNameFromList.equals(username)){
                 count++;
@@ -32,6 +33,7 @@ public class UserAuthentication {
                 newUserObject.setUsername(username);
                 newUserObject.setPrivateKey(RSAKeys.generate()[0]);
                 newUserObject.setPublicKey(RSAKeys.generate()[1]);
+                newUserObject.setLoggedIn(false);
                 //record the new user in the user list and record that list in the file
                 usersList.add(newUserObject);
                 JsonFileHandler.WriteObjectsToJsonFile_UserRSAKeyFile(usersList);

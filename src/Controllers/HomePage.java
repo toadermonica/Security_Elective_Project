@@ -1,5 +1,6 @@
 package Controllers;
 
+import Utils.DigitalSignatureProcessing;
 import Utils.FileUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -54,32 +55,25 @@ public class HomePage implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 //        SingleSelectionModel<Tab> selectionModel = tabPane.getSelectionModel();
 //        selectionModel.select(1);
-        populateUIFileList();
+        populateAllUIFileList();
         comboBoxFileSelector.setItems(fileList);
         comboBox_unsignedFile.setItems(encryptedFileList);
         comboBox_checkSignatureValidation.setItems(signedFileList);
     }
 
-    public void getComboBoxItem (ActionEvent event) {
+    public void comboBoxEncryptedFileList(ActionEvent event) {
         selectedFileLable.setText(comboBoxFileSelector.getValue());
-        System.out.println(comboBoxFileSelector.getValue());
-        JsonFileHandler fh = new JsonFileHandler();
-
-        for (UserFiles item : fh.ReadObjectsFromJsonFile_ListOfFiles()) {
-            if(item.getName().equals(comboBoxFileSelector.getValue())){
-                showSecret.setText(item.getSecret());
-//                return;
-            }
-        }
     }
     public void addFileSignature (ActionEvent event) {
         System.out.println(comboBox_unsignedFile.getValue());
+        String unsignedEncryptedFileName = comboBox_unsignedFile.getValue();
+        DigitalSignatureProcessing.processDigitalSignature(unsignedEncryptedFileName);
     }
     public void checkSignatureValidation(ActionEvent event){
         System.out.println(comboBox_checkSignatureValidation.getValue());
     }
 
-    private void populateUIFileList(){
+    private void populateAllUIFileList(){
         String itemStatus;
         boolean itemSignatureStatus;
         JsonFileHandler jsFileHandler = new JsonFileHandler();
@@ -122,7 +116,9 @@ public class HomePage implements Initializable {
     public void decryptFile(ActionEvent actionEvent) throws IOException {
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         FileChooser fileChooser = new FileChooser();
+        File defaultDirectory = new File("src/Assets");
         fileChooser.setTitle("Open Resource File");
+        fileChooser.setInitialDirectory(defaultDirectory);
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("AES files (*.aes)", "*.aes");
         fileChooser.getExtensionFilters().add(extFilter);
 
@@ -165,7 +161,7 @@ public class HomePage implements Initializable {
     }
 
 
-    private static void encrypt(String value, String fileName) throws Exception{
+    public static void encrypt(String value, String fileName) throws Exception{
         String fileNameFormatted = fileName.substring(0, fileName.lastIndexOf('.'));
         System.out.println("file name is " + fileNameFormatted);
         Security.addProvider(new BouncyCastleProvider());
@@ -194,20 +190,18 @@ public class HomePage implements Initializable {
         cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
 
         Path currentRelativePath = Paths.get("");
-        String s = currentRelativePath.toAbsolutePath().toString();
-        System.out.println("Current relative path is: " + s);
+        String currentStringRelativePath = currentRelativePath.toAbsolutePath().toString();
+        System.out.println("Current relative path is: " + currentStringRelativePath);
         String encryptedFileName = fileNameFormatted + ".encrypted." + ivString + "." + "aes";
-        FileUtils.write(s + "/src/assets/" + encryptedFileName, output);
+        FileUtils.write(currentStringRelativePath + "/src/assets/" + encryptedFileName, output);
 
         // write to ListOfFIles
         JsonFileHandler fh = new JsonFileHandler();
-        List<UserFiles> objs = fh.ReadObjectsFromJsonFile_ListOfFiles();
         UserFiles fileOfUser = new UserFiles();
         fileOfUser.setName(encryptedFileName);
         fileOfUser.setSecret(Hex.toHexString(keyBytes));
         fileOfUser.setStatus("Encrypted");
-        objs.add(fileOfUser);
-        fh.WriteObjectsToJsonFile_ListOfFiles(fileOfUser);
+        fh.AddEncryptedFileToList(fileOfUser);
     }
 
     private void decrypt(String value, String fileName) throws Exception{
