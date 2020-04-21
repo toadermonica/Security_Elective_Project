@@ -92,7 +92,7 @@
                             <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="268.0" prefWidth="600.0" style="-fx-background-color: #ffffff;">
                                     <children>
-                                        <Button fx:id="decryptDigitalSignatureBtn" layoutX="65.0" layoutY="138.0" mnemonicParsing="false" onAction="#decryptFile" prefHeight="25.0" prefWidth="117.0" text="Sign File" />
+                                        <Button fx:id="decryptDigitalSignatureBtn" layoutX="65.0" layoutY="138.0" mnemonicParsing="false" onAction="#decryptFileDigitalSignature" prefHeight="25.0" prefWidth="117.0" text="Sign File" />
                                         <TextField fx:id="secretkeyInputInputDigitalSignature" layoutX="64.0" layoutY="54.0" prefHeight="25.0" prefWidth="449.0" />
                                         <Label layoutX="64.0" layoutY="30.0" prefHeight="23.0" prefWidth="445.0" text="Please insert below the secret key for the file you want to digitally sign" />
                                         <Label layoutX="29.0" layoutY="9.0" prefHeight="20.0" prefWidth="81.0" text="Signing files" underline="true">

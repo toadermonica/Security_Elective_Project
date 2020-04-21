@@ -38,16 +38,16 @@ public class JsonFileHandler {
      * Updating the signiture status of a file - use for successfully updating the current listOfFile & the list of signed files
      * @param userFileItemName
      */
-   public boolean UpdateSignatureStatusToExistingEncryptedFile(String userFileItemName){
+   public boolean UpdateSignatureToExistingEncryptedFile(String userFileItemName, byte[]signature){
        boolean isUpdated = false;
        // read the format of the file as a list -- this list will be updated with new writes
        List<UserFiles> currentItemsInJsonFile = ReadObjectsFromJsonFile_ListOfFiles();
        for(int i=0; i<currentItemsInJsonFile.size(); i++){
            String currentItemInJsonFileName = currentItemsInJsonFile.get(i).getName();
-           boolean currentIntemInJsonFileSignitureStatus = currentItemsInJsonFile.get(i).getSignedStatus();
            //if the name of the file matches and the signature status is false then proceed and update the signature status
-           if(currentItemInJsonFileName.contentEquals(userFileItemName) && !currentIntemInJsonFileSignitureStatus){
+           if(currentItemInJsonFileName.contentEquals(userFileItemName)){
                currentItemsInJsonFile.get(i).setSignedStatus(true);
+               currentItemsInJsonFile.get(i).setSignature(signature);
                isUpdated = true;
            }
        }

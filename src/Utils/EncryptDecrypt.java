@@ -17,7 +17,7 @@ import java.util.List;
 public class EncryptDecrypt {
     public void encrypt(String value, String fileName) throws Exception{
         String fileNameFormatted = fileName.substring(0, fileName.lastIndexOf('.'));
-        System.out.println("file name is " + fileNameFormatted);
+        System.out.println("file name fileNameFormatted is " + fileNameFormatted);
         Security.addProvider(new BouncyCastleProvider());
 
         SecureRandom random = new SecureRandom();
@@ -47,7 +47,8 @@ public class EncryptDecrypt {
         String s = currentRelativePath.toAbsolutePath().toString();
         System.out.println("Current relative path is: " + s);
         String encryptedFileName = fileNameFormatted + ".encrypted." + ivString + "." + "aes";
-        FileUtils.write(s + "/src/assets/" + encryptedFileName, output);
+        FileUtils fileUtils = new FileUtils();
+        fileUtils.write(s + "/src/assets/" + encryptedFileName, output);
 
         // write to ListOfFIles
         JsonFileHandler fh = new JsonFileHandler();
@@ -60,7 +61,8 @@ public class EncryptDecrypt {
         fh.WriteObjectsToJsonFile(objs);
     }
 
-    public void decrypt(String value, String fileName, TextField secretkeyInput) throws Exception{
+    public void decrypt(String fileName, TextField secretkeyInput) throws Exception{
+        System.out.println("Cristi's file name looks like this: "+fileName);
         Security.addProvider(new BouncyCastleProvider());
 
         byte[] keyBytes = Hex.decode(secretkeyInput.getText());
@@ -73,7 +75,8 @@ public class EncryptDecrypt {
         String s = currentRelativePath.toAbsolutePath().toString();
         System.out.println("Current relative path is: " + s);
         String inFile = s + "/src/assets/" + fileName;
-        byte[] input = FileUtils.readAllBytes(inFile);
+        FileUtils fileUtils = new FileUtils();
+        byte[] input = fileUtils.readAllBytes(inFile);
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding", "BC");
         SecretKeySpec key = new SecretKeySpec(keyBytes, "AES");
 
@@ -88,6 +91,35 @@ public class EncryptDecrypt {
         // String outFile = dir + "/" + mainName + "." + "decrypted" + "." + "pdf"; Utils.FileUtils.write(outFile, output);
 
         System.out.println("Current relative path is: " + s);
-        FileUtils.write(s + "/src/assets/"  + mainName + ".decrypted." + ivString + "." + "aes", output);
+        fileUtils.write(s + "/src/assets/"  + mainName + ".decrypted." + ivString + "." + "aes", output);
     }
+    public String CopyDecryptCristi(String fileName, TextField secretkeyInput) throws Exception{
+        System.out.println("Cristi's file name looks like this: "+fileName);
+        System.out.println("secretkeyInput : "+secretkeyInput);
+
+        Security.addProvider(new BouncyCastleProvider());
+
+        byte[] keyBytes = Hex.decode(secretkeyInput.getText());
+
+        String ivString = "9f741fdb5d8845bdb48a94394e84f8a3";
+        byte[] iv = Hex.decode(ivString);
+
+        // reading
+        Path currentRelativePath = Paths.get("");
+        String s = currentRelativePath.toAbsolutePath().toString();
+        System.out.println("Current relative path is: " + s);
+        String inFile = s + "/src/assets/" + fileName;
+        FileUtils fileUtils = new FileUtils();
+        byte[] input = fileUtils.readAllBytes(inFile);
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding", "BC");
+        SecretKeySpec key = new SecretKeySpec(keyBytes, "AES");
+
+        // TODO String ivString = getIV(fileName); // read the IV byte[] iv = Hex.decode(ivString);
+        cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
+        byte[] output = cipher.doFinal(input);
+        String planText = new String(output);
+        System.out.println("OUTPUT: " + planText);
+        return planText;
+    }
+
 }

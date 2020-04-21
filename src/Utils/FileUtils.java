@@ -10,7 +10,7 @@ public class FileUtils {
   // readAllBytes:
   // The method merely hides the use of Paths.
 
-  public static byte[] readAllBytes(String inputFile) {
+  public byte[] readAllBytes(String inputFile) {
     byte[] bytesRead = {};
     try {
       bytesRead = Files.readAllBytes(Paths.get(inputFile));
@@ -25,7 +25,7 @@ public class FileUtils {
   // Overwrites if the file exists already; otherwise creates the file
   // This behavior is due to java.nio.file.Files.write
 
-  public static void write(String outputFile, byte[] output) {
+  public void write(String outputFile, byte[] output) {
     try {
       Files.write(Paths.get(outputFile), output);
     } catch (Exception e) {
@@ -64,7 +64,7 @@ public class FileUtils {
   
   // getAllFileNamesWithExt/3: file names must have both a certain filename and a certain extension
  
-  public static String[] getAllFileNames(String dir, String name, String ext) {
+  public String[] getAllFileNames(String dir, String name, String ext) {
     ArrayList<String> results = new ArrayList<String>();
     File[] files = new File(dir).listFiles();
     for (File file : files) {
@@ -83,7 +83,7 @@ public class FileUtils {
 
   // getAllFileNamesWithExt/2: file names need only have a certain extension
 
-  public static String[] getAllFileNames(String dir, String ext) {
+  public String[] getAllFileNames(String dir, String ext) {
     ArrayList<String> results = new ArrayList<String>();
     File[] files = new File(dir).listFiles();
     for (File file : files) {

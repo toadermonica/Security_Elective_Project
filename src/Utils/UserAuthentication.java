@@ -1,5 +1,5 @@
 package Utils;
-import Libraries.RSAKeys;
+import Libraries.UserRSAKeys;
 import Models.User;
 
 import java.sql.SQLOutput;
@@ -54,8 +54,8 @@ public class UserAuthentication {
                 //create the user object with keys and username
                 User newUserObject = new User();
                 JsonFileHandler jfh = new JsonFileHandler();
-                RSAKeys keys = new RSAKeys();
-                User userObject = keys.assignUserRSAKeys();
+                UserRSAKeys userRSAkeys = new UserRSAKeys();
+                User userObject = userRSAkeys.assignUserRSAKeys();
                 userObject.setUsername(username);
                 userObject.setLoggedIn(false);
                 //record the new user in the user list and record that list in the file

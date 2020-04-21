@@ -6,10 +6,9 @@ package Libraries;
         import java.security.*;
         import java.security.interfaces.RSAPrivateKey;
         import java.security.interfaces.RSAPublicKey;
-        import java.security.spec.InvalidKeySpecException;
         import java.security.spec.RSAPrivateKeySpec;
 
-public class RSAKeys {
+public class UserRSAKeys {
     /**
      * Generating the public and private RSA keys
      * @return Object[0] privateKey and Object[1] publicKey

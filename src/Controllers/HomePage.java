@@ -47,7 +47,8 @@ public class HomePage implements Initializable {
     @FXML
     private ComboBox<String> comboBoxFileSelector, comboBox_unsignedFile, comboBox_checkSignatureValidation;
     @FXML private Label selectedFileLabel;
-    @FXML public Label welcomeUserLabel;
+    @FXML private Label welcomeUserLabel;
+    @FXML private TextField secretkeyInputInputDigitalSignature;
 
     ObservableList<String> fileList = FXCollections.observableArrayList();
     ObservableList<String> encryptedFileList = FXCollections.observableArrayList();
@@ -76,12 +77,6 @@ public class HomePage implements Initializable {
                 showSecret.setText(item.getSecret());
             }
         }
-    }
-    public void addFileSignature (ActionEvent event) {
-        System.out.println(comboBox_unsignedFile.getValue());
-        String unsignedEncryptedFileName = comboBox_unsignedFile.getValue();
-        DigitalSignatureProcessing dgs =  new DigitalSignatureProcessing();
-        dgs.processDigitalSignature(unsignedEncryptedFileName);
     }
     public void checkSignatureValidation(ActionEvent event){
         System.out.println(comboBox_checkSignatureValidation.getValue());
@@ -143,7 +138,7 @@ public class HomePage implements Initializable {
             String fileValue = fileUtils.readFile(file);
             System.out.println(fileValue);
             try {
-                encryptDecrypt.decrypt(fileValue, file.getName(), secretkeyInput);
+                encryptDecrypt.decrypt(file.getName(), secretkeyInput);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -172,5 +167,32 @@ public class HomePage implements Initializable {
             }
         }
         return null;
+    }
+
+    public void addFileSignature (ActionEvent event) {
+        System.out.println(comboBox_unsignedFile.getValue());
+
+    }
+
+    public void decryptFileDigitalSignature(ActionEvent event) {
+        //retrieve the name of the file selected in the dropdown list
+        String unsignedEncryptedFileName = comboBox_unsignedFile.getValue();
+        System.out.println("Unencrypted unsigned file name from combo box is: "+unsignedEncryptedFileName);
+        //decrypt the text in the file and grab it in plain text variable
+
+        String plainText = null;
+        try {
+            plainText = encryptDecrypt.CopyDecryptCristi(unsignedEncryptedFileName, secretkeyInputInputDigitalSignature);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(plainText==null){
+            //ToDO: add an error label that the user can see
+            return;
+        }
+        // call on the digitalsignatureprocessing class
+        DigitalSignatureProcessing dgs =  new DigitalSignatureProcessing();
+        dgs.processDigitalSignature(unsignedEncryptedFileName, plainText);
+
     }
 }
