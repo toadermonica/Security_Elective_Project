@@ -80,7 +80,8 @@ public class HomePage implements Initializable {
     public void addFileSignature (ActionEvent event) {
         System.out.println(comboBox_unsignedFile.getValue());
         String unsignedEncryptedFileName = comboBox_unsignedFile.getValue();
-        DigitalSignatureProcessing.processDigitalSignature(unsignedEncryptedFileName);
+        DigitalSignatureProcessing dgs =  new DigitalSignatureProcessing();
+        dgs.processDigitalSignature(unsignedEncryptedFileName);
     }
     public void checkSignatureValidation(ActionEvent event){
         System.out.println(comboBox_checkSignatureValidation.getValue());

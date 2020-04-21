@@ -15,7 +15,7 @@ import java.security.Security;
 import java.util.List;
 
 public class EncryptDecrypt {
-    public static void encrypt(String value, String fileName) throws Exception{
+    public void encrypt(String value, String fileName) throws Exception{
         String fileNameFormatted = fileName.substring(0, fileName.lastIndexOf('.'));
         System.out.println("file name is " + fileNameFormatted);
         Security.addProvider(new BouncyCastleProvider());

@@ -60,7 +60,7 @@ public class LoginPage implements Initializable {
 
     private String userSignUpStatus(String username, String password){
         UserAuthentication userAuth = new UserAuthentication();
-        String newUserSignUp = userAuth.CreateNewUser(username, password);
+        String newUserSignUp = userAuth.SignUpNewUser(username, password);
         if(newUserSignUp != null){
             return newUserSignUp;
         }

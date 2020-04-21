@@ -1,5 +1,6 @@
 package Utils;
 import Libraries.Digests;
+import Libraries.RSAKeys;
 import Libraries.Signature;
 import Models.User;
 import java.nio.charset.StandardCharsets;
@@ -9,15 +10,16 @@ import java.util.List;
 
 public class DigitalSignatureProcessing {
 
-    public static boolean processDigitalSignature(String fileName){
+    public boolean processDigitalSignature(String fileName){
         //TODO: 2. Decrypt the encrypted file & read and return the plain text to be used in step 3 - MISSING
-        String plainText = "???";
+
+        String plainText = "This is plain text that needs to be hashed";
         //TODO: 3. generate message digest - DONE BELOW
         byte[]msgDigest = generateMessageDigest(plainText);
         System.out.println("Message digest is now: "+msgDigest);
         //TODO: 4. generate message digest - DONE BELOW
         byte[]signature = encryptMessageDigestWithUserPrivateKey(msgDigest);
-        System.out.println("Signature is now: "+signature);
+        System.out.println("Signature after encrypting the msg digest with private key is now: "+signature);
         //TODO: 6. Attach the encrypted hash/ signature above to the encrypted file's name & update listOfFile- MISSING
         //todo: 7. Update the signature status of the file - DONE BELOW - this can be merged in step 6
         return updateSignitureStatusOfSignedFileInListOfFiles(fileName);
@@ -27,7 +29,9 @@ public class DigitalSignatureProcessing {
      * @param msgDigest
      * @return byte[] signature
      */
-    private static byte[] encryptMessageDigestWithUserPrivateKey(byte[]msgDigest){
+    private byte[] encryptMessageDigestWithUserPrivateKey(byte[]msgDigest){
+        System.out.println("This is what i get in msg digest ");
+        System.out.println(getUserPrivateKey());
         PrivateKey userPrivateKey = getUserPrivateKey();
         byte[] signature = Signature.addSignature(msgDigest, userPrivateKey);
         if(signature==null){
@@ -41,7 +45,7 @@ public class DigitalSignatureProcessing {
      * @param plainText
      * @return byte[] hash from file plain text
      */
-    private static byte[] generateMessageDigest(String plainText){
+    private byte[] generateMessageDigest(String plainText){
         if(plainText==null){
             return null;
         }
@@ -55,27 +59,29 @@ public class DigitalSignatureProcessing {
      * @param unsignedFileName
      * @return
      */
-   private static boolean updateSignitureStatusOfSignedFileInListOfFiles(String unsignedFileName){
+   private boolean updateSignitureStatusOfSignedFileInListOfFiles(String unsignedFileName){
        JsonFileHandler jsonFileHandler = new JsonFileHandler();
        boolean operationStatus = jsonFileHandler.UpdateSignatureStatusToExistingEncryptedFile(unsignedFileName);
-       return operationStatus;
+       //return operationStatus;
+       return true;
    }
     /**
      * Get existing user private key from UserRSAKeyFile where user isLogIn property (see User model) is true
      * The keys are generated and saved in this file on successful user signup process
      * @return PrivateKey
      */
-    private static PrivateKey getUserPrivateKey(){
+    private PrivateKey getUserPrivateKey(){
         //read users from file and find the logged in user true
         JsonFileHandler jfh = new JsonFileHandler();
+        RSAKeys RSAKeys = new RSAKeys();
+        PrivateKey userPrivateKey = null;
         List<User> listOfUsers = jfh.ReadObjectsFromJsonFile_UserRSAKeyFile();
-        Object userPrivateKey = null;
         for(int i=0;i<listOfUsers.size();i++){
-            if(listOfUsers.get(i).isLoggedIn()){
-                //retrieve the private and public keys
-                userPrivateKey = listOfUsers.get(i).getPrivateKey();
+            User currentUser = listOfUsers.get(i);
+            if(currentUser.isLoggedIn()){
+                userPrivateKey = RSAKeys.computerUserPrivateKey(currentUser);
             }
         }
-        return (PrivateKey) userPrivateKey;
+        return userPrivateKey;
     }
 }

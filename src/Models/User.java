@@ -8,8 +8,9 @@ public class User {
     private String username;
     private String password;
     private String salt;
-    private Object privateKey;
-    private Object publicKey;
+    private byte [] arraymodulus;
+    private byte [] arrayPublicExponent;
+    private byte [] arrayPrivateExponent;
     private boolean isLoggedIn;
 
     /**
@@ -40,16 +41,28 @@ public class User {
     public void setSalt(String salt) {
         this.salt = salt;
     }
-    public Object getPrivateKey() {
-        return privateKey;
+    public byte[] getArraymodulus() {
+        return arraymodulus;
     }
-    public void setPrivateKey(Object privateKey) {
-        this.privateKey = privateKey;
+
+    public void setArraymodulus(byte[] arraymodulus) {
+        this.arraymodulus = arraymodulus;
     }
-    public Object getPublicKey() {
-        return publicKey;
+
+    public byte[] getArrayPublicExponent() {
+        return arrayPublicExponent;
     }
-    public void setPublicKey(Object publicKey) {
-        this.publicKey = publicKey;
+
+    public void setArrayPublicExponent(byte[] arrayPublicExponent) {
+        this.arrayPublicExponent = arrayPublicExponent;
     }
+
+    public byte[] getArrayPrivateExponent() {
+        return arrayPrivateExponent;
+    }
+
+    public void setArrayPrivateExponent(byte[] arrayPrivateExponent) {
+        this.arrayPrivateExponent = arrayPrivateExponent;
+    }
+
 }
