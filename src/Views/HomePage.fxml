@@ -9,17 +9,28 @@
     <children>
         <BorderPane layoutX="-1.0" layoutY="-1.0" prefHeight="400.0" prefWidth="600.0">
             <top>
-                <HBox prefHeight="61.0" prefWidth="600.0" style="-fx-background-color: #87cefa;" BorderPane.alignment="CENTER">
-                    <children>
-                        <Label prefHeight="27.0" prefWidth="52.0" textAlignment="RIGHT">
-                            <HBox.margin>
-                                <Insets bottom="10.0" left="10.0" right="5.0" top="10.0" />
-                            </HBox.margin>
-                            <padding>
-                                <Insets bottom="5.0" left="5.0" top="5.0" />
-                            </padding>
-                        </Label>
-                    </children></HBox>
+                <HBox alignment="CENTER_RIGHT" prefHeight="61.0" prefWidth="600.0" style="-fx-background-color: #87cefa;" BorderPane.alignment="CENTER">
+               <children>
+                  <Label fx:id="welcomeUserLabel" alignment="BOTTOM_LEFT" prefHeight="21.0" prefWidth="269.0" style="-fx-font-weight: bold;" textAlignment="CENTER" textFill="WHITE">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                     <padding>
+                        <Insets right="20.0" />
+                     </padding>
+                  </Label>
+                  <Button fx:id="LogOutBtn" defaultButton="true" mnemonicParsing="false" onAction="#userLogout" prefHeight="29.0" prefWidth="73.0" style="-fx-background-color: #87cefa; -fx-border-color: white;" text="LogOut" textAlignment="CENTER" textFill="WHITE">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <HBox.margin>
+                        <Insets right="20.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font name="Calibri" size="13.0" />
+                     </font>
+                  </Button>
+               </children></HBox>
             </top>
             <bottom>
                 <HBox prefHeight="42.0" prefWidth="600.0" style="-fx-background-color: #87cefa;" BorderPane.alignment="CENTER" />
@@ -52,7 +63,7 @@
                                             </padding>
                                         </TextArea>
                                         <Label layoutX="454.0" layoutY="55.0" />
-                                        <Label fx:id="selectedFileLable" alignment="CENTER" contentDisplay="CENTER" layoutX="338.0" layoutY="50.0" prefHeight="17.0" prefWidth="232.0" style="-fx-border-color: grey;" text="Your selected file name appears here" textAlignment="CENTER">
+                                        <Label fx:id="selectedFileLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="338.0" layoutY="50.0" prefHeight="17.0" prefWidth="232.0" style="-fx-border-color: grey;" text="Your selected file name appears here" textAlignment="CENTER">
                                             <padding>
                                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                             </padding>
@@ -61,39 +72,54 @@
                             </content>
                         </Tab>
                         <Tab id="fileManagerTab" fx:id="fileManagerTab" style="-fx-background-color: white;" text="File Management">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="268.0" prefWidth="600.0" style="-fx-background-color: #ffffff;">
-                           <children>
-                              <Button fx:id="encryptBtn" layoutX="29.0" layoutY="42.0" mnemonicParsing="false" onAction="#encryptFile" text="Encrypt file" />
-                              <Button fx:id="decryptBtn" layoutX="117.0" layoutY="42.0" mnemonicParsing="false" onAction="#decryptFile" text="Decrypt file" />
-                              <TextField fx:id="secretkeyInput" layoutX="365.0" layoutY="85.0" />
-                              <TextField fx:id="secretkeyInput" layoutX="365.0" layoutY="85.0" />
-                              <Label layoutX="299.0" layoutY="89.0" prefHeight="17.0" prefWidth="66.0" text="Secret key:" />
-                              <Label layoutX="29.0" layoutY="14.0" text="File Encryption Section" underline="true">
+                            <content>
+                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="268.0" prefWidth="600.0" style="-fx-background-color: #ffffff;">
+                                     <children>
+                              <Button fx:id="encryptBtn" layoutX="29.0" layoutY="57.0" mnemonicParsing="false" onAction="#encryptFile" prefHeight="28.0" prefWidth="485.0" text="Encrypt file" />
+                              <Button fx:id="decryptBtn" layoutX="30.0" layoutY="192.0" mnemonicParsing="false" onAction="#decryptFile" prefHeight="31.0" prefWidth="484.0" text="Decrypt file" />
+                              <TextField fx:id="secretkeyInput" layoutX="30.0" layoutY="147.0" prefHeight="31.0" prefWidth="484.0" />
+                              <Label layoutX="30.0" layoutY="121.0" prefHeight="23.0" prefWidth="505.0" text="Decryption - Insert file's secret key below (key can be taken from password manager section)." />
+                              <Label layoutX="29.0" layoutY="14.0" prefHeight="20.0" prefWidth="189.0" text="File Encryption &amp; Decryption" underline="true">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="29.0" layoutY="95.0" text="File Signature Section" underline="true">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </Label>
-                              <ComboBox fx:id="comboBox_unsignedFile" layoutX="43.0" layoutY="150.0" onAction="#addFileSignature" prefHeight="25.0" prefWidth="167.0" promptText="Select encrypted file" />
-                              <Label layoutX="43.0" layoutY="189.0" text="Validate signature">
-                                 <font>
-                                    <Font size="13.0" />
-                                 </font>
-                              </Label>
-                              <ComboBox fx:id="comboBox_checkSignatureValidation" layoutX="43.0" layoutY="213.0" onAction="#checkSignatureValidation" prefHeight="25.0" prefWidth="168.0" promptText="Select file for validation" />
-                              <Label layoutX="42.0" layoutY="125.0" text="Sign files">
-                                 <font>
-                                    <Font size="13.0" />
-                                 </font>
-                              </Label>
-                           </children></AnchorPane>
-                  </content>
-                </Tab>
+                           </children>
+                                     </AnchorPane>
+                            </content>
+                        </Tab>
+                        <Tab id="digitalSignatureTab" fx:id="digitalSignatureTab" style="-fx-background-color: white;" text="Digital Signatures">
+                            <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="268.0" prefWidth="600.0" style="-fx-background-color: #ffffff;">
+                                    <children>
+                                        <Button fx:id="decryptDigitalSignatureBtn" layoutX="65.0" layoutY="138.0" mnemonicParsing="false" onAction="#decryptFileDigitalSignature" prefHeight="25.0" prefWidth="117.0" text="Sign File" />
+                                        <TextField fx:id="secretkeyInputInputDigitalSignature" layoutX="64.0" layoutY="54.0" prefHeight="25.0" prefWidth="449.0" />
+                                        <Label layoutX="64.0" layoutY="30.0" prefHeight="23.0" prefWidth="445.0" text="Please insert below the secret key for the file you want to digitally sign" />
+                                        <Label layoutX="29.0" layoutY="9.0" prefHeight="20.0" prefWidth="81.0" text="Signing files" underline="true">
+                                            <font>
+                                                <Font size="13.0" />
+                                            </font>
+                                        </Label>
+                                        <Label layoutX="29.0" layoutY="169.0" prefHeight="15.0" prefWidth="154.0" text="Validate file signatures" underline="true">
+                                            <font>
+                                                <Font size="14.0" />
+                                            </font>
+                                        </Label>
+                                        <ComboBox fx:id="comboBox_unsignedFile" layoutX="65.0" layoutY="105.0" onAction="#addFileSignature" prefHeight="20.0" prefWidth="449.0" promptText="Select encrypted file" />
+                                        <Label layoutX="66.0" layoutY="194.0" prefHeight="14.0" prefWidth="447.0" text="Select the signed file for validating the signature by using the below dropdown">
+                                            <font>
+                                                <Font size="12.0" />
+                                            </font>
+                                        </Label>
+                                        <ComboBox fx:id="comboBox_checkSignatureValidation" layoutX="66.0" layoutY="218.0" onAction="#checkSignatureValidation" prefHeight="30.0" prefWidth="448.0" promptText="Select file for validation" />
+                                        <Label layoutX="64.0" layoutY="86.0" prefHeight="16.0" prefWidth="428.0" text="Please select the corresponding file from the drop down">
+                                            <font>
+                                                <Font size="13.0" />
+                                            </font>
+                                        </Label>
+                                    </children></AnchorPane>
+                            </content>
+                        </Tab>
                     </tabs>
                 </TabPane>
             </center>

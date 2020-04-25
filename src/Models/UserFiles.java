@@ -1,8 +1,17 @@
 package Models;
 
 public class UserFiles {
-    String name, location, file, secret, status;
-    boolean signedStatus;
+    private String name, secret, status;
+    private boolean signedStatus;
+    private byte[] signature;
+
+    public byte[] getSignature() {
+        return signature;
+    }
+
+    public void setSignature(byte[] signature) {
+        this.signature = signature;
+    }
 
     public String getName() {
         return name;
@@ -10,22 +19,6 @@ public class UserFiles {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public String getFile() {
-        return file;
-    }
-
-    public void setFile(String file) {
-        this.file = file;
     }
 
     public String getSecret() {

@@ -1,12 +1,14 @@
 package Controllers;
 
-import Utils.DigitalSignatureProcessing;
-import Utils.EncryptDecrypt;
-import Utils.FileUtils;
+import Models.User;
+import Utils.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -24,7 +26,6 @@ import java.security.SecureRandom;
 import java.security.Security;
 import java.util.ResourceBundle;
 import Models.UserFiles;
-import Utils.JsonFileHandler;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
@@ -43,10 +44,11 @@ public class HomePage implements Initializable {
     private TextArea showSecret;
     @FXML
     private TextField secretkeyInput;
-
     @FXML
     private ComboBox<String> comboBoxFileSelector, comboBox_unsignedFile, comboBox_checkSignatureValidation;
-    @FXML private Label selectedFileLable;
+    @FXML private Label selectedFileLabel;
+    @FXML private Label welcomeUserLabel;
+    @FXML private TextField secretkeyInputInputDigitalSignature;
 
     ObservableList<String> fileList = FXCollections.observableArrayList();
     ObservableList<String> encryptedFileList = FXCollections.observableArrayList();
@@ -58,6 +60,7 @@ public class HomePage implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 //        SingleSelectionModel<Tab> selectionModel = tabPane.getSelectionModel();
 //        selectionModel.select(1);
+        welcomeUserLabel.setText(getLoggedInUserName());
         populateAllUIFileList();
         comboBoxFileSelector.setItems(fileList);
         comboBox_unsignedFile.setItems(encryptedFileList);
@@ -65,7 +68,7 @@ public class HomePage implements Initializable {
     }
 
     public void comboBoxEncryptedFileList(ActionEvent event) {
-        selectedFileLable.setText(comboBoxFileSelector.getValue());
+        selectedFileLabel.setText(comboBoxFileSelector.getValue());
         System.out.println(comboBoxFileSelector.getValue());
         JsonFileHandler fh = new JsonFileHandler();
 
@@ -74,11 +77,6 @@ public class HomePage implements Initializable {
                 showSecret.setText(item.getSecret());
             }
         }
-    }
-    public void addFileSignature (ActionEvent event) {
-        System.out.println(comboBox_unsignedFile.getValue());
-        String unsignedEncryptedFileName = comboBox_unsignedFile.getValue();
-        DigitalSignatureProcessing.processDigitalSignature(unsignedEncryptedFileName);
     }
     public void checkSignatureValidation(ActionEvent event){
         System.out.println(comboBox_checkSignatureValidation.getValue());
@@ -140,10 +138,61 @@ public class HomePage implements Initializable {
             String fileValue = fileUtils.readFile(file);
             System.out.println(fileValue);
             try {
-                encryptDecrypt.decrypt(fileValue, file.getName(), secretkeyInput);
+                encryptDecrypt.decrypt(file.getName(), secretkeyInput);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void userLogout(ActionEvent event) throws IOException {
+        System.out.println("User to be logged out: "+welcomeUserLabel.getText());
+        if(welcomeUserLabel.getText() == null){
+            return;
+        }
+        UserAuthentication userAuth = new UserAuthentication();
+        userAuth.LogOutUser(welcomeUserLabel.getText());
+        Parent logInPageRoot = FXMLLoader.load(getClass().getClassLoader().getResource("Views/LogInPage.fxml"));
+        Scene scene = ((Node) event.getSource()).getScene();
+        scene.setRoot(logInPageRoot);
+    }
+    private String getLoggedInUserName(){
+        JsonFileHandler jfh = new JsonFileHandler();
+        List<User> listOfAllSystemUsers = jfh.ReadObjectsFromJsonFile_UserRSAKeyFile();
+        for (int i = 0 ; i < listOfAllSystemUsers.size(); i++){
+            User userObj = listOfAllSystemUsers.get(i);
+            System.out.println("This is the logged in user: "+userObj.isLoggedIn());
+            if(userObj.isLoggedIn()){
+                return userObj.getUsername();
+            }
+        }
+        return null;
+    }
+
+    public void addFileSignature (ActionEvent event) {
+        System.out.println(comboBox_unsignedFile.getValue());
+
+    }
+
+    public void decryptFileDigitalSignature(ActionEvent event) {
+        //retrieve the name of the file selected in the dropdown list
+        String unsignedEncryptedFileName = comboBox_unsignedFile.getValue();
+        System.out.println("Unencrypted unsigned file name from combo box is: "+unsignedEncryptedFileName);
+        //decrypt the text in the file and grab it in plain text variable
+
+        String plainText = null;
+        try {
+            plainText = encryptDecrypt.CopyDecryptCristi(unsignedEncryptedFileName, secretkeyInputInputDigitalSignature);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(plainText==null){
+            //ToDO: add an error label that the user can see
+            return;
+        }
+        // call on the digitalsignatureprocessing class
+        DigitalSignatureProcessing dgs =  new DigitalSignatureProcessing();
+        dgs.processDigitalSignature(unsignedEncryptedFileName, plainText);
+
     }
 }
