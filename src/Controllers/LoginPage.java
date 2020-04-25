@@ -15,8 +15,11 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -30,7 +33,7 @@ public class LoginPage implements Initializable {
     @FXML
     private TextField usernameField;
 
-    public void logInBtnAction(ActionEvent actionEvent) throws IOException {
+    public void logInBtnAction(ActionEvent actionEvent) throws IOException, NoSuchProviderException, NoSuchAlgorithmException {
         Parent homePageRoot = FXMLLoader.load(getClass().getClassLoader().getResource("Views/HomePage.fxml"));
         Scene scene = ((Node) actionEvent.getSource()).getScene();
         if (isValidUserLogIn())
@@ -39,7 +42,7 @@ public class LoginPage implements Initializable {
         }
     }
 
-    public void signUpBtnAction(ActionEvent actionEvent) {
+    public void signUpBtnAction(ActionEvent actionEvent) throws NoSuchProviderException, NoSuchAlgorithmException, UnsupportedEncodingException {
         System.out.println("You clicked SIGNIN btn");
         username = usernameField.getText();//user_name.getText() == null || user_name.getText().trim().isEmpty()
         password = passwordField.getText();
@@ -51,7 +54,7 @@ public class LoginPage implements Initializable {
 
     }
 
-    private boolean isValidUserLogIn(){
+    private boolean isValidUserLogIn() throws NoSuchProviderException, NoSuchAlgorithmException {
 
         username = usernameField.getText();//user_name.getText() == null || user_name.getText().trim().isEmpty()
         password = passwordField.getText();
@@ -64,10 +67,16 @@ public class LoginPage implements Initializable {
             return false;
         }
 
+        boolean isValid = UserAuthentication.SignIn(username, password);
+        if(!isValid){
+            System.out.println("Username or password invalid");
+            return false;
+        }
+
         return true;
     }
 
-    private String userSignUpStatus(String username, String password){
+    private String userSignUpStatus(String username, String password) throws NoSuchProviderException, NoSuchAlgorithmException, UnsupportedEncodingException {
         String newUserSignUp = UserAuthentication.CreateNewUser(username, password);
         if(newUserSignUp != null){
             return newUserSignUp;
