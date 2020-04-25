@@ -1,5 +1,6 @@
 package Tests;
 
+import Utils.DigitalSignatureProcessing;
 import Utils.EncryptDecrypt;
 import javafx.scene.control.TextField;
 import org.junit.jupiter.api.Test;
@@ -11,16 +12,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class EncryptDecryptTest {
 
-//    @Test
-//    void encrypt() throws Exception {
-//        EncryptDecrypt encryptDecrypt = new EncryptDecrypt();
-//        String output = encryptDecrypt.encrypt("this is a test", "mock.txt");
-//        System.out.println(output.toString());
-//        System.out.println(output.length());
-//
-//
-//        assertEquals(output.length(), 32);
-//    }
+    @Test
+    void encrypt() throws Exception {
+        EncryptDecrypt encryptDecrypt = new EncryptDecrypt();
+        String output = encryptDecrypt.encrypt("this is a test", "mock.txt");
+
+        assertEquals(output.length(), 32);
+    }
 
     @Test
     void decrypt() throws Exception {
@@ -29,5 +27,4 @@ class EncryptDecryptTest {
 
         assertEquals(output, "cat1 cat2 cat3");
     }
-
 }
