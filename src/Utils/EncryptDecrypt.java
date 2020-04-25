@@ -93,13 +93,13 @@ public class EncryptDecrypt {
         System.out.println("Current relative path is: " + s);
         fileUtils.write(s + "/src/assets/"  + mainName + ".decrypted." + ivString + "." + "aes", output);
     }
-    public String CopyDecryptCristi(String fileName, TextField secretkeyInput) throws Exception{
+    public String CopyDecryptCristi(String fileName, String secretkeyInput) throws Exception{
         System.out.println("Cristi's file name looks like this: "+fileName);
         System.out.println("secretkeyInput : "+secretkeyInput);
 
         Security.addProvider(new BouncyCastleProvider());
 
-        byte[] keyBytes = Hex.decode(secretkeyInput.getText());
+        byte[] keyBytes = Hex.decode(secretkeyInput);
 
         String ivString = "9f741fdb5d8845bdb48a94394e84f8a3";
         byte[] iv = Hex.decode(ivString);

@@ -45,16 +45,18 @@ public class HomePage implements Initializable {
     @FXML
     private TextField secretkeyInput;
     @FXML
-    private ComboBox<String> comboBoxFileSelector, comboBox_unsignedFile, comboBox_checkSignatureValidation;
+    private ComboBox<String> comboBoxFileSelector, comboBox_unsignedFile, comboBox_checkSignatureValidation, combobox_selectFileUser;
     @FXML private Label selectedFileLabel;
     @FXML private Label welcomeUserLabel;
     @FXML private TextField secretkeyInputInputDigitalSignature;
 
-    ObservableList<String> fileList = FXCollections.observableArrayList();
-    ObservableList<String> encryptedFileList = FXCollections.observableArrayList();
-    ObservableList<String> signedFileList = FXCollections.observableArrayList();
-    EncryptDecrypt encryptDecrypt = new EncryptDecrypt();
-    FileUtils fileUtils = new FileUtils();
+    private ObservableList<String> fileList = FXCollections.observableArrayList();
+    private ObservableList<String> encryptedFileList = FXCollections.observableArrayList();
+    private ObservableList<String> signedFileList = FXCollections.observableArrayList();
+    private ObservableList<String> userNameList = FXCollections.observableArrayList();
+    private EncryptDecrypt encryptDecrypt = new EncryptDecrypt();
+    private FileUtils fileUtils = new FileUtils();
+    private String fileOwnerUserName = null;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -65,6 +67,9 @@ public class HomePage implements Initializable {
         comboBoxFileSelector.setItems(fileList);
         comboBox_unsignedFile.setItems(encryptedFileList);
         comboBox_checkSignatureValidation.setItems(signedFileList);
+        getListOfActiveUsers();
+        combobox_selectFileUser.setItems(userNameList);
+
     }
 
     public void comboBoxEncryptedFileList(ActionEvent event) {
@@ -79,16 +84,31 @@ public class HomePage implements Initializable {
         }
     }
     public void checkSignatureValidation(ActionEvent event){
-        System.out.println(comboBox_checkSignatureValidation.getValue());
+        System.out.println("checkSignatureValidation: "+comboBox_checkSignatureValidation.getValue());
+        System.out.println("Checking signature for this user: "+fileOwnerUserName);
+        String signedFileName = comboBox_checkSignatureValidation.getValue();
+        if(signedFileName == null || fileOwnerUserName == null){
+            //Need to post / enable a label to be retuned to the user on UI display
+            return; // so it will break the function :)
+        }
+        DigitalSignatureProcessing dsp = new DigitalSignatureProcessing();
+        boolean signatureValidity = dsp.verifyDigitalSignature(signedFileName, fileOwnerUserName);
+        System.out.println("After verification isValidSignature is: "+signatureValidity);
+    }
+    public void selectFileUser(ActionEvent event) {
+        System.out.println("This is the file user selected: "+combobox_selectFileUser.getValue());
+        fileOwnerUserName = combobox_selectFileUser.getValue();
     }
 
     private void populateAllUIFileList(){
         String itemStatus;
         boolean itemSignatureStatus;
+        String fileName;
         JsonFileHandler jsFileHandler = new JsonFileHandler();
         List<UserFiles> files = jsFileHandler.ReadObjectsFromJsonFile_ListOfFiles();
-        files.forEach(file -> fileList.add(file.getName()));
         for(int i = 0; i < files.size(); i++){
+            fileName = files.get(i).getName();
+            fileList.add(fileName);
             itemStatus = files.get(i).getStatus();
             itemSignatureStatus = files.get(i).getSignedStatus();
             if (itemStatus.contentEquals("Encrypted")){
@@ -97,6 +117,15 @@ public class HomePage implements Initializable {
                 }else{
                     signedFileList.add(files.get(i).getName());
                 }
+            }
+        }
+    }
+    private void getListOfActiveUsers(){
+        JsonFileHandler jsFileHandler = new JsonFileHandler();
+        List<User> listOfUsers = jsFileHandler.ReadObjectsFromJsonFile_UserRSAKeyFile();
+        for(int i = 0; i<listOfUsers.size(); i++){
+            if(!listOfUsers.get(i).getUsername().equals(welcomeUserLabel.getText())){
+                userNameList.add(listOfUsers.get(i).getUsername());
             }
         }
     }
@@ -171,7 +200,6 @@ public class HomePage implements Initializable {
 
     public void addFileSignature (ActionEvent event) {
         System.out.println(comboBox_unsignedFile.getValue());
-
     }
 
     public void decryptFileDigitalSignature(ActionEvent event) {
@@ -182,7 +210,7 @@ public class HomePage implements Initializable {
 
         String plainText = null;
         try {
-            plainText = encryptDecrypt.CopyDecryptCristi(unsignedEncryptedFileName, secretkeyInputInputDigitalSignature);
+            plainText = encryptDecrypt.CopyDecryptCristi(unsignedEncryptedFileName, secretkeyInputInputDigitalSignature.getText());
         } catch (Exception e) {
             e.printStackTrace();
         }

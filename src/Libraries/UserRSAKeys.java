@@ -1,5 +1,6 @@
 package Libraries;
         import Models.User;
+        import Utils.JsonFileHandler;
         import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
         import java.math.BigInteger;
@@ -7,6 +8,8 @@ package Libraries;
         import java.security.interfaces.RSAPrivateKey;
         import java.security.interfaces.RSAPublicKey;
         import java.security.spec.RSAPrivateKeySpec;
+        import java.security.spec.RSAPublicKeySpec;
+        import java.util.List;
 
 public class UserRSAKeys {
     /**
@@ -52,7 +55,28 @@ public class UserRSAKeys {
         }
         return privKey;
     }
-    public void computeUserPublicKey(byte[]publicExponent, byte[]modulus){
-
+    public PublicKey computeUserPublicKey(String userName){
+        System.out.println("Current userName is: "+userName);
+        BigInteger exponent = null;
+        BigInteger modulus = null;
+        PublicKey generatedPublicKey = null;
+        JsonFileHandler jfh = new JsonFileHandler();
+        List<User> listOfUsers = jfh.ReadObjectsFromJsonFile_UserRSAKeyFile();
+        for(int i = 0; i< listOfUsers.size(); i++){
+            if(listOfUsers.get(i).getUsername().equals(userName)){
+                exponent = new BigInteger(listOfUsers.get(i).getArrayPublicExponent());
+                modulus = new BigInteger(listOfUsers.get(i).getArraymodulus());
+            }
+        }
+        if(exponent != null || modulus != null){
+            RSAPublicKeySpec publicKeySpec = new RSAPublicKeySpec(modulus, exponent);
+            try {
+                KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+                generatedPublicKey = keyFactory.generatePublic(publicKeySpec);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return generatedPublicKey;
     }
 }

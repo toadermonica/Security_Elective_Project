@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.*?>
+<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
@@ -9,7 +11,7 @@
     <children>
         <BorderPane layoutX="-1.0" layoutY="-1.0" prefHeight="400.0" prefWidth="600.0">
             <top>
-                <HBox alignment="CENTER_RIGHT" prefHeight="61.0" prefWidth="600.0" style="-fx-background-color: #87cefa;" BorderPane.alignment="CENTER">
+                <HBox alignment="CENTER_RIGHT" prefHeight="37.0" prefWidth="598.0" style="-fx-background-color: #87cefa;" BorderPane.alignment="CENTER">
                <children>
                   <Label fx:id="welcomeUserLabel" alignment="BOTTOM_LEFT" prefHeight="21.0" prefWidth="269.0" style="-fx-font-weight: bold;" textAlignment="CENTER" textFill="WHITE">
                      <HBox.margin>
@@ -33,12 +35,12 @@
                </children></HBox>
             </top>
             <bottom>
-                <HBox prefHeight="42.0" prefWidth="600.0" style="-fx-background-color: #87cefa;" BorderPane.alignment="CENTER" />
+                <HBox prefHeight="28.0" prefWidth="597.0" style="-fx-background-color: #87cefa;" BorderPane.alignment="CENTER" />
             </bottom>
             <center>
                 <TabPane prefHeight="249.0" prefWidth="600.0" style="-fx-background-color: #000080;" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
                     <tabs>
-                        <Tab id="passwordManagerTab" fx:id="passwordManagerTab" style="-fx-background-color: white;" text="Password Manager">
+                        <Tab id="passwordManagerTab" fx:id="passwordManagerTab" style="-fx-background-color: #87cefa;" text="Password Manager">
                             <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #ffffff;">
                                     <children>
@@ -71,7 +73,7 @@
                                     </children></AnchorPane>
                             </content>
                         </Tab>
-                        <Tab id="fileManagerTab" fx:id="fileManagerTab" style="-fx-background-color: white;" text="File Management">
+                        <Tab id="fileManagerTab" fx:id="fileManagerTab" style="-fx-background-color: #87cefa;" text="File Management">
                             <content>
                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="268.0" prefWidth="600.0" style="-fx-background-color: #ffffff;">
                                      <children>
@@ -88,39 +90,47 @@
                                      </AnchorPane>
                             </content>
                         </Tab>
-                        <Tab id="digitalSignatureTab" fx:id="digitalSignatureTab" style="-fx-background-color: white;" text="Digital Signatures">
+                        <Tab id="digitalSignatureTab" fx:id="digitalSignatureTab" style="-fx-text-fill: white; -fx-background-color: #87cefa;" text="Digital Signatures">
                             <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="268.0" prefWidth="600.0" style="-fx-background-color: #ffffff;">
                                     <children>
                                         <Button fx:id="decryptDigitalSignatureBtn" layoutX="65.0" layoutY="138.0" mnemonicParsing="false" onAction="#decryptFileDigitalSignature" prefHeight="25.0" prefWidth="117.0" text="Sign File" />
                                         <TextField fx:id="secretkeyInputInputDigitalSignature" layoutX="64.0" layoutY="54.0" prefHeight="25.0" prefWidth="449.0" />
                                         <Label layoutX="64.0" layoutY="30.0" prefHeight="23.0" prefWidth="445.0" text="Please insert below the secret key for the file you want to digitally sign" />
-                                        <Label layoutX="29.0" layoutY="9.0" prefHeight="20.0" prefWidth="81.0" text="Signing files" underline="true">
+                                        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="-1.0" layoutY="-5.0" prefHeight="34.0" prefWidth="607.0" style="-fx-background-color: #87cefa;" text="Signing files" textAlignment="CENTER" textFill="WHITE" underline="true">
                                             <font>
-                                                <Font size="13.0" />
+                                                <Font name="System Bold" size="13.0" />
                                             </font>
                                         </Label>
-                                        <Label layoutX="29.0" layoutY="169.0" prefHeight="15.0" prefWidth="154.0" text="Validate file signatures" underline="true">
+                                        <Label alignment="CENTER" contentDisplay="CENTER" layoutY="164.0" prefHeight="32.0" prefWidth="600.0" style="-fx-background-color: #87cefa;" text="Validate file signatures" textAlignment="CENTER" textFill="WHITE" underline="true">
                                             <font>
-                                                <Font size="14.0" />
+                                                <Font name="System Bold" size="14.0" />
                                             </font>
                                         </Label>
                                         <ComboBox fx:id="comboBox_unsignedFile" layoutX="65.0" layoutY="105.0" onAction="#addFileSignature" prefHeight="20.0" prefWidth="449.0" promptText="Select encrypted file" />
-                                        <Label layoutX="66.0" layoutY="194.0" prefHeight="14.0" prefWidth="447.0" text="Select the signed file for validating the signature by using the below dropdown">
+                                        <Label layoutX="66.0" layoutY="254.0" prefHeight="13.0" prefWidth="447.0" text="Select the signed file for validating the signature by using the below dropdown">
                                             <font>
                                                 <Font size="12.0" />
                                             </font>
                                         </Label>
-                                        <ComboBox fx:id="comboBox_checkSignatureValidation" layoutX="66.0" layoutY="218.0" onAction="#checkSignatureValidation" prefHeight="30.0" prefWidth="448.0" promptText="Select file for validation" />
+                                        <ComboBox fx:id="comboBox_checkSignatureValidation" layoutX="66.0" layoutY="273.0" onAction="#checkSignatureValidation" prefHeight="23.0" prefWidth="448.0" promptText="Select file for validation" />
                                         <Label layoutX="64.0" layoutY="86.0" prefHeight="16.0" prefWidth="428.0" text="Please select the corresponding file from the drop down">
                                             <font>
                                                 <Font size="13.0" />
                                             </font>
                                         </Label>
+                              <ComboBox fx:id="combobox_selectFileUser" layoutX="66.0" layoutY="214.0" onAction="#selectFileUser" prefHeight="27.0" prefWidth="140.0" promptText="Select file sender" />
+                              <Label layoutX="66.0" layoutY="196.0" prefHeight="13.0" prefWidth="333.0" text="Select file owner user from below dropdown" />
                                     </children></AnchorPane>
                             </content>
                         </Tab>
                     </tabs>
+               <effect>
+                  <Glow />
+               </effect>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
                 </TabPane>
             </center>
         </BorderPane>

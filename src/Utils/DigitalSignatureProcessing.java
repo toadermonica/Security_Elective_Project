@@ -2,7 +2,7 @@ package Utils;
 
 import Libraries.Digests;
 import Libraries.UserRSAKeys;
-import Libraries.Signature;
+import Libraries.DigitalSignatures;
 import Models.User;
 
 import java.nio.charset.StandardCharsets;
@@ -23,6 +23,19 @@ public class DigitalSignatureProcessing {
         return updateSignatureAndStatusOfFile(fileName, signature);
     }
 
+    public boolean verifyDigitalSignature(String fileName, String UserNameOrFileSender){
+        System.out.println("The  fileName and the UserNameOfFileSender are: "+ fileName + " "+UserNameOrFileSender);
+        // we loop the list of users in order to get the data to compute their public key
+        JsonFileHandler jfh = new JsonFileHandler();
+        // we loop and get the computed public key && validate the signature
+        DigitalSignatures ds = new DigitalSignatures();
+        boolean isValidSignature = ds.verifySignature(UserNameOrFileSender, fileName);
+        return isValidSignature;
+        // we decrypt the digital signature with the public key
+        // we decrypt the file and make the hash of the received document's plain text
+        // we compare the hash got from the decryption with the hash got from the plain text
+    }
+
     /**
      * Step 5: Encrypt hash value with user's private key
      * @param msgDigest
@@ -32,7 +45,8 @@ public class DigitalSignatureProcessing {
         System.out.println("This is what i get in msg digest ");
         System.out.println(getUserPrivateKey());
         PrivateKey userPrivateKey = getUserPrivateKey();
-        byte[] signature = Signature.addSignature(msgDigest, userPrivateKey);
+        DigitalSignatures ds = new DigitalSignatures();
+        byte[] signature = ds.addSignature(msgDigest, userPrivateKey);
         if(signature==null){
             System.out.println("Something went fishy in encryptMessageDigestWithUserPrivateKey - DigitalSignatureProcessing.java");
             return null;
