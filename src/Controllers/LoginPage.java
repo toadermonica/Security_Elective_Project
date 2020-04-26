@@ -45,8 +45,7 @@ public class LoginPage implements Initializable {
 
         if (!isValidUserLogIn()){
             loginAlertLabel.setText("Your username or password is incorrect.");
-            loginAlertLabel.setTextFill(Color.WHITE);
-            loginAlertLabel.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
+            loginAlertLabel.setTextFill(Color.RED);
             return;
         }
 
@@ -63,8 +62,6 @@ public class LoginPage implements Initializable {
         String password = passwordField.getText();
         UserAuthentication ua = new UserAuthentication();
         if (ua.passwordValidation(password) == false){
-            passwordValidationLabel.setTextFill(Color.WHITE);
-            passwordValidationLabel.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
             passwordValidationLabel.setText("Password must contain the following:\n" +
                     "  *A lower case letter must occur at least once\n" +
                     "  *An upper case letter must occur at least once\n" +
@@ -83,12 +80,10 @@ public class LoginPage implements Initializable {
 //            System.out.println("Signing up new user status is: "+ userSignUpStatus(username, password));
             userSignUpStatus(usernameField.getText(), passwordField.getText());
             loginAlertLabel.setText("You have successfully created an account, now you can login.");
-            loginAlertLabel.setTextFill(Color.WHITE);
-            loginAlertLabel.setBackground(new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, Insets.EMPTY)));
+            loginAlertLabel.setTextFill(Color.GREEN);
+
         }catch (Exception e){
             loginAlertLabel.setText("This username is already taken.");
-            loginAlertLabel.setTextFill(Color.WHITE);
-            loginAlertLabel.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
         }
     }
 
