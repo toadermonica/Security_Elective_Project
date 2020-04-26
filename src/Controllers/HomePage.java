@@ -6,10 +6,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -43,7 +48,12 @@ public class HomePage implements Initializable {
     @FXML
     private TextArea showSecret;
     @FXML
+    private TextArea decryptedText;
+    @FXML
     private TextField secretkeyInput;
+    @FXML
+    private Label decryptAlertLabel;
+
     @FXML
     private ComboBox<String> comboBoxFileSelector, comboBox_unsignedFile, comboBox_checkSignatureValidation, combobox_selectFileUser;
     @FXML private Label selectedFileLabel;
@@ -70,6 +80,11 @@ public class HomePage implements Initializable {
         getListOfActiveUsers();
         combobox_selectFileUser.setItems(userNameList);
 
+    }
+    public void logoutBtnAction(ActionEvent event) throws IOException {
+        Parent loginPageRoot = FXMLLoader.load(getClass().getClassLoader().getResource("Views/LoginPage.fxml"));
+        Scene scene = ((Node) event.getSource()).getScene();
+        scene.setRoot(loginPageRoot);
     }
 
     public void comboBoxEncryptedFileList(ActionEvent event) {
@@ -144,6 +159,7 @@ public class HomePage implements Initializable {
             System.out.println(fileValue);
             try {
                 encryptDecrypt.encrypt(fileValue, file.getName());
+                populateAllUIFileList();
                 // NOTE uncomment this in production
 //                file.delete();
             } catch (Exception e) {
@@ -163,12 +179,14 @@ public class HomePage implements Initializable {
 
         File file = fileChooser.showOpenDialog(stage);
         if(file != null){
-
             String fileValue = fileUtils.readFile(file);
-            System.out.println(fileValue);
             try {
-                encryptDecrypt.decrypt(file.getName(), secretkeyInput);
+                String output = encryptDecrypt.decrypt(fileValue, file.getName(), secretkeyInput);
+                decryptedText.setText(output);
             } catch (Exception e) {
+                decryptAlertLabel.setText("Please check if you have provided the correct secret key.");
+                decryptAlertLabel.setTextFill(Color.WHITE);
+                decryptAlertLabel.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
                 e.printStackTrace();
             }
         }

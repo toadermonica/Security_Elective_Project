@@ -59,6 +59,7 @@ public class EncryptDecrypt {
         user.setStatus("Encrypted");
         objs.add(user);
         fh.WriteObjectsToJsonFile(objs);
+        return  Hex.toHexString(output);
     }
 
     public void decrypt(String fileName, TextField secretkeyInput) throws Exception{
@@ -92,6 +93,40 @@ public class EncryptDecrypt {
 
         System.out.println("Current relative path is: " + s);
         fileUtils.write(s + "/src/assets/"  + mainName + ".decrypted." + ivString + "." + "aes", output);
+        return new String(output);
+    }
+
+    public String decrypt2(String value, String fileName, String secretkeyInput) throws Exception{
+        Security.addProvider(new BouncyCastleProvider());
+
+        byte[] keyBytes = Hex.decode(secretkeyInput);
+
+        String ivString = "9f741fdb5d8845bdb48a94394e84f8a3";
+        byte[] iv = Hex.decode(ivString);
+
+        // reading
+        Path currentRelativePath = Paths.get("");
+        String s = currentRelativePath.toAbsolutePath().toString();
+        System.out.println("Current relative path is: " + s);
+        String inFile = s + "/src/assets/" + fileName;
+        FileUtils fileUtils = new FileUtils();
+        byte[] input = fileUtils.readAllBytes(inFile);
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding", "BC");
+        SecretKeySpec key = new SecretKeySpec(keyBytes, "AES");
+
+        // TODO String ivString = getIV(fileName); // read the IV byte[] iv = Hex.decode(ivString);
+        cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
+        byte[] output = cipher.doFinal(input);
+        System.out.println("OUTPUT: " + new String(output));
+
+        // TODO
+//        String mainName = fileName.split("\\.")[0];
+//        System.out.println(mainName);
+        // String outFile = dir + "/" + mainName + "." + "decrypted" + "." + "pdf"; Utils.FileUtils.write(outFile, output);
+
+//        System.out.println("Current relative path is: " + s);
+//        fileUtils.write(s + "/src/assets/"  + mainName + ".decrypted." + ivString + "." + "aes", output);
+        return new String(output);
     }
     public String CopyDecryptCristi(String fileName, String secretkeyInput) throws Exception{
         System.out.println("Cristi's file name looks like this: "+fileName);
