@@ -125,4 +125,15 @@ public class UserAuthentication {
         }
         return signUpStatus;
     }
+    public boolean passwordValidation(String password) {
+
+        String pattern = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#!`~$%^&+=])(?=\\S+$).{8,}";
+
+        if(password.matches(pattern) == false){
+            return false;
+        }
+
+        return true;
+    }
+
 }
