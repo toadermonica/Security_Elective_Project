@@ -234,6 +234,7 @@ public class HomePage implements Initializable {
         String plainText = null;
         try {
             plainText = encryptDecrypt.CopyDecryptCristi(unsignedEncryptedFileName, secretkeyInputInputDigitalSignature.getText());
+            System.out.println("The plain text from file to be signed is: "+plainText);
         } catch (Exception e) {
             e.printStackTrace();
         }

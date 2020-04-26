@@ -46,8 +46,8 @@ public class JsonFileHandler {
            String currentItemInJsonFileName = currentItemsInJsonFile.get(i).getName();
            //if the name of the file matches and the signature status is false then proceed and update the signature status
            if(currentItemInJsonFileName.contentEquals(userFileItemName)){
-               currentItemsInJsonFile.get(i).setSignedStatus(true);
                currentItemsInJsonFile.get(i).setSignature(signature);
+               currentItemsInJsonFile.get(i).setSignedStatus(true);
                isUpdated = true;
            }
        }
