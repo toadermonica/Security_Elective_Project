@@ -53,7 +53,8 @@ public class HomePage implements Initializable {
     private TextField secretkeyInput;
     @FXML
     private Label decryptAlertLabel;
-
+    @FXML
+    private Label encryptedLabel;
     @FXML
     private ComboBox<String> comboBoxFileSelector, comboBox_unsignedFile, comboBox_checkSignatureValidation, combobox_selectFileUser;
     @FXML private Label selectedFileLabel;
@@ -160,6 +161,10 @@ public class HomePage implements Initializable {
             try {
                 encryptDecrypt.encrypt(fileValue, file.getName());
                 populateAllUIFileList();
+
+                encryptedLabel.setText("Encrypted file successfully.");
+                encryptedLabel.setTextFill(Color.WHITE);
+                encryptedLabel.setBackground(new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, Insets.EMPTY)));
                 // NOTE uncomment this in production
 //                file.delete();
             } catch (Exception e) {
