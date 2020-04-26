@@ -46,30 +46,30 @@ public class UserRSAKeys {
         BigInteger exponent = new BigInteger(currentUser.getArrayPrivateExponent());
         BigInteger modulus = new BigInteger(currentUser.getArraymodulus());
         RSAPrivateKeySpec keySpec = new RSAPrivateKeySpec(modulus, exponent);
-        PrivateKey privKey = null;
+        PrivateKey userPrivateKey = null;
         try {
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            privKey = keyFactory.generatePrivate(keySpec);
+            userPrivateKey = keyFactory.generatePrivate(keySpec);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return privKey;
+        return userPrivateKey;
     }
     public PublicKey computeUserPublicKey(String userName){
         System.out.println("Current userName is: "+userName);
-        BigInteger exponent = null;
-        BigInteger modulus = null;
+        BigInteger publicKeyexponent = null;
+        BigInteger publicKeymodulus = null;
         PublicKey generatedPublicKey = null;
         JsonFileHandler jfh = new JsonFileHandler();
         List<User> listOfUsers = jfh.ReadObjectsFromJsonFile_UserRSAKeyFile();
         for(int i = 0; i< listOfUsers.size(); i++){
             if(listOfUsers.get(i).getUsername().equals(userName)){
-                exponent = new BigInteger(listOfUsers.get(i).getArrayPublicExponent());
-                modulus = new BigInteger(listOfUsers.get(i).getArraymodulus());
+                publicKeyexponent = new BigInteger(listOfUsers.get(i).getArrayPublicExponent());
+                publicKeymodulus = new BigInteger(listOfUsers.get(i).getArraymodulus());
             }
         }
-        if(exponent != null || modulus != null){
-            RSAPublicKeySpec publicKeySpec = new RSAPublicKeySpec(modulus, exponent);
+        if(publicKeyexponent != null || publicKeymodulus != null){
+            RSAPublicKeySpec publicKeySpec = new RSAPublicKeySpec(publicKeymodulus, publicKeyexponent);
             try {
                 KeyFactory keyFactory = KeyFactory.getInstance("RSA");
                 generatedPublicKey = keyFactory.generatePublic(publicKeySpec);

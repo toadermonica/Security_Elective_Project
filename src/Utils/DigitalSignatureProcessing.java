@@ -53,20 +53,7 @@ public class DigitalSignatureProcessing {
         }
         return signature;
     }
-    /**
-     * Step 3: Generate hash based on plain text of file
-     * @param plainText
-     * @return byte[] hash from file plain text
-     */
-    private byte[] generateMessageDigest(String plainText){
-        if(plainText==null){
-            return null;
-        }
-        Digests digestInstance = new Digests();
-        byte[] plainTextToBytes = plainText.getBytes(StandardCharsets.UTF_8);
-        byte[] hashValue = digestInstance.generateMessageDigest(plainTextToBytes);
-        return hashValue;
-    }
+
     /**
      * Step 7: Method to update the listoffiles signed status from false to true
      * @param unsignedFileName
@@ -96,5 +83,19 @@ public class DigitalSignatureProcessing {
             }
         }
         return userPrivateKey;
+    }
+    /**
+     * Step 3: Generate hash based on plain text of file
+     * @param plainText
+     * @return byte[] hash from file plain text
+     */
+    public byte[] generateMessageDigest(String plainText){
+        if(plainText==null){
+            return null;
+        }
+        Digests digestInstance = new Digests();
+        byte[] plainTextToBytes = plainText.getBytes(StandardCharsets.UTF_8);
+        byte[] hashValue = digestInstance.generateMessageDigest(plainTextToBytes);
+        return hashValue;
     }
 }

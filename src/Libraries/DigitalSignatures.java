@@ -1,20 +1,22 @@
 package Libraries;
-import Models.UserFiles;
-import Utils.EncryptDecrypt;
-import Utils.JsonFileHandler;
-import org.bouncycastle.util.encoders.Hex;
-import java.security.*;
+
+import Models.*;
+import Utils.*;
+
+import java.nio.charset.StandardCharsets;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.Signature;
 import java.util.List;
-import java.util.logging.FileHandler;
 
 public class DigitalSignatures {
 
-    public byte[] addSignature(byte[]input, PrivateKey privateKey){
+    public byte[] addSignature(byte[]msgDigestInput, PrivateKey privateKey){
         try {
             java.security.Signature signature =
                     java.security.Signature.getInstance("SHA256withRSA", "BC");
             signature.initSign(privateKey);
-            signature.update(input);
+            signature.update(msgDigestInput);
             return signature.sign();
         } catch (Exception e) {
             e.printStackTrace();
@@ -47,10 +49,12 @@ public class DigitalSignatures {
             e.printStackTrace();
         }
         //byte[] input = Hex.decode("a0a1a2a3a4a5a6a7a0a1a2a3a4a5a6a7a0a1a2a3a4a5a6a7a0a1a2a3a4a5a6a7"); // this here needs to be the decrypted plain text from the file.
+        //make messagedigest from that file again :)
+        DigitalSignatureProcessing dsg = new DigitalSignatureProcessing();
+        byte[]input = dsg.generateMessageDigest(plainTextInput);
         try {
             java.security.Signature verifier = Signature.getInstance("SHA256withRSA", "BC");
             verifier.initVerify(userPublicKey);
-            byte[]input = plainTextInput.getBytes();
             verifier.update(input);
             isValidSignature = verifier.verify(byteSignature);
         } catch (Exception e) {
@@ -58,4 +62,6 @@ public class DigitalSignatures {
         }
         return isValidSignature;
     }
+
+
 }
