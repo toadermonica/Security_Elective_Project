@@ -10,8 +10,9 @@ import java.security.*;
 import java.util.List;
 
 public class UserAuthentication {
-    public static boolean SignIn(String username, String password) throws NoSuchProviderException, NoSuchAlgorithmException {
-        List<User> usersList = JsonFileHandler.ReadObjectsFromJsonFile_UserRSAKeyFile();
+    public boolean SignIn(String username, String password) throws NoSuchProviderException, NoSuchAlgorithmException {
+        JsonFileHandler jfh = new JsonFileHandler();
+        List<User> usersList = jfh.ReadObjectsFromJsonFile_UserRSAKeyFile();
         int length = usersList.size();
         for (int i = 0; i < length; i++){
             String userNameFromList = usersList.get(i).getUsername();
@@ -39,13 +40,39 @@ public class UserAuthentication {
         }
         return false;
     }
-    public static String CreateNewUser(String username, String password) throws NoSuchProviderException, NoSuchAlgorithmException, UnsupportedEncodingException {
+    public boolean LogInUser(String userName){
+        return UpdateCurrentUserLoginStatus(userName, true);
+    }
+    public boolean LogOutUser(String userName){
+        return UpdateCurrentUserLoginStatus(userName, false);
+    }
+    /**
+     * Method to change the existing user status value from user file to the resuested one
+     *  - can be used for login and logout & will change the status if it is different than the existing one
+     * @param userName
+     * @param requestedStatus
+     * @return boolean if status was changed or not.
+     */
+    private boolean UpdateCurrentUserLoginStatus(String userName, boolean requestedStatus){
+        JsonFileHandler jfh = new JsonFileHandler();
+        List<User> listOfAllSystemUsers = jfh.ReadObjectsFromJsonFile_UserRSAKeyFile();
+        for (int i = 0 ; i < listOfAllSystemUsers.size(); i++){
+            User userObj = listOfAllSystemUsers.get(i);
+            if(userObj.getUsername().equals(userName) && requestedStatus != userObj.isLoggedIn()){
+                userObj.setLoggedIn(requestedStatus);
+                jfh.WriteObjectsToJsonFile_UserRSAKeyFile(listOfAllSystemUsers);
+                return true;
+            }
+        }
+        return false;
+    }
+    public String SignUpNewUser(String username, String password) throws NoSuchProviderException, NoSuchAlgorithmException, UnsupportedEncodingException {
     	JsonFileHandler jfh = new JsonFileHandler();
         List<User> usersList = jfh.ReadObjectsFromJsonFile_UserRSAKeyFile();
         Object[] signUpUserMessage = CreateNewUser(username, password, usersList);
         return (String) signUpUserMessage[1];
     }
-    private static Object[] CreateNewUser(String username, String password, List<User> usersList) throws NoSuchProviderException, NoSuchAlgorithmException, UnsupportedEncodingException {
+    private Object[] CreateNewUser(String username, String password, List<User> usersList) throws NoSuchProviderException, NoSuchAlgorithmException, UnsupportedEncodingException {
         Security.addProvider(new BouncyCastleProvider());
 
         StringBuilder passAndSalt = new StringBuilder();
@@ -58,10 +85,6 @@ public class UserAuthentication {
 
         passAndSalt.append(password);
         mDigest.update(passAndSalt.toString().getBytes("UTF-8")); // Change this to "UTF-16" if needed
-        System.out.println("pass and salt " + passAndSalt);
-//        byte[] digest = mDigest.digest();
-
-//        mDigest.update(input);
         byte[] hashValue = mDigest.digest();
         String hashHexString = Hex.toHexString(hashValue);
         System.out.println("Hashvalue: " + hashHexString);
@@ -85,8 +108,6 @@ public class UserAuthentication {
                 userObject.setUsername(username);
                 userObject.setPassword(hashHexString);
                 userObject.setSalt(salt.toString());
-                userObject.setPrivateKey(RSAKeys.generate()[0]);
-                userObject.setPublicKey(RSAKeys.generate()[1]);
                 userObject.setLoggedIn(false);
                 //record the new user in the user list and record that list in the file
                 usersList.add(userObject);

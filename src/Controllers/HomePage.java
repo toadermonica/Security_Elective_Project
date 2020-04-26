@@ -181,7 +181,7 @@ public class HomePage implements Initializable {
         if(file != null){
             String fileValue = fileUtils.readFile(file);
             try {
-                String output = encryptDecrypt.decrypt(fileValue, file.getName(), secretkeyInput);
+                String output = encryptDecrypt.decrypt(file.getName(), secretkeyInput);
                 decryptedText.setText(output);
             } catch (Exception e) {
                 decryptAlertLabel.setText("Please check if you have provided the correct secret key.");

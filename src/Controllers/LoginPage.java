@@ -27,8 +27,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class LoginPage implements Initializable {
-    private String username;
-    private String password;
     @FXML
     private TextField passwordField;
     @FXML
@@ -40,12 +38,15 @@ public class LoginPage implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) { }
 
-    public void logInBtnAction(ActionEvent actionEvent) throws IOException {
+    public void logInBtnAction(ActionEvent actionEvent) throws IOException, NoSuchProviderException, NoSuchAlgorithmException {
+
         if (!isValidUserLogIn()){
             loginAlertLabel.setText("Your username or password is incorrect.");
             loginAlertLabel.setTextFill(Color.WHITE);
             loginAlertLabel.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
+            return;
         }
+
         UserAuthentication userAuth = new UserAuthentication();
         userAuth.LogInUser(usernameField.getText());
 
@@ -63,7 +64,7 @@ public class LoginPage implements Initializable {
         //this means we need the username and the keys to be saved in UserRSAKeyFile - need to write to jsonfile
         try{
 //            System.out.println("Signing up new user status is: "+ userSignUpStatus(username, password));
-            userSignUpStatus(username, password);
+            userSignUpStatus(usernameField.getText(), passwordField.getText());
             loginAlertLabel.setText("You have successfully created an account, now you can login.");
             loginAlertLabel.setTextFill(Color.WHITE);
             loginAlertLabel.setBackground(new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -78,18 +79,18 @@ public class LoginPage implements Initializable {
 
     private boolean isValidUserLogIn() throws NoSuchProviderException, NoSuchAlgorithmException {
 
-        username = usernameField.getText();//user_name.getText() == null || user_name.getText().trim().isEmpty()
-        password = passwordField.getText();
-        System.out.println("Username is "+username);
-        System.out.println("Password is "+password);
+        System.out.println("Username is "+usernameField.getText());
+        System.out.println("Password is "+passwordField.getText());
 
-        if(username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty()){
-            System.out.println("Username is "+username);
-            System.out.println("Password is "+password);
+        if(usernameField.getText() == null || usernameField.getText().trim().isEmpty() || passwordField.getText() == null || passwordField.getText().trim().isEmpty()){
+            System.out.println("Username is "+usernameField.getText());
+            System.out.println("Password is "+passwordField.getText());
             return false;
         }
 
-        boolean isValid = UserAuthentication.SignIn(username, password);
+        boolean isValid;
+        UserAuthentication uauth = new UserAuthentication();
+        isValid = uauth.SignIn(usernameField.getText(), passwordField.getText());
         if(!isValid){
             System.out.println("Username or password invalid");
             return false;
@@ -103,9 +104,6 @@ public class LoginPage implements Initializable {
         String newUserSignUp = userAuth.SignUpNewUser(username, password);
         if(newUserSignUp != null){
             return newUserSignUp;
-        }
-        else{
-            System.out.println(32489984);
         }
         return "Success";
     }

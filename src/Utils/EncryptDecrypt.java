@@ -15,7 +15,7 @@ import java.security.Security;
 import java.util.List;
 
 public class EncryptDecrypt {
-    public void encrypt(String value, String fileName) throws Exception{
+    public String encrypt(String value, String fileName) throws Exception{
         String fileNameFormatted = fileName.substring(0, fileName.lastIndexOf('.'));
         System.out.println("file name fileNameFormatted is " + fileNameFormatted);
         Security.addProvider(new BouncyCastleProvider());
@@ -62,7 +62,7 @@ public class EncryptDecrypt {
         return  Hex.toHexString(output);
     }
 
-    public void decrypt(String fileName, TextField secretkeyInput) throws Exception{
+    public String decrypt(String fileName, TextField secretkeyInput) throws Exception{
         System.out.println("Cristi's file name looks like this: "+fileName);
         Security.addProvider(new BouncyCastleProvider());
 
