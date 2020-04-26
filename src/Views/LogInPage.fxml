@@ -22,5 +22,6 @@
       <TextField fx:id="usernameField" layoutX="213.0" layoutY="116.0" promptText="username" />
       <Label layoutX="213.0" layoutY="38.0" prefHeight="17.0" prefWidth="149.0" text="Please authenticate yourself" />
       <Label fx:id="loginAlertLabel" layoutX="149.0" layoutY="176.0" prefHeight="17.0" prefWidth="368.0" />
+      <Label fx:id="passwordValidationLabel" layoutX="135.0" layoutY="235.0" prefHeight="127.0" prefWidth="298.0" />
    </children>
 </Pane>
