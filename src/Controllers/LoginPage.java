@@ -34,6 +34,9 @@ public class LoginPage implements Initializable {
     @FXML
     private Label loginAlertLabel;
 
+    @FXML
+    private Label passwordValidationLabel;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) { }
@@ -57,6 +60,20 @@ public class LoginPage implements Initializable {
     }
 
     public void signUpBtnAction(ActionEvent actionEvent) throws NoSuchProviderException, NoSuchAlgorithmException, UnsupportedEncodingException {
+        String password = passwordField.getText();
+        UserAuthentication ua = new UserAuthentication();
+        if (ua.passwordValidation(password) == false){
+            passwordValidationLabel.setTextFill(Color.WHITE);
+            passwordValidationLabel.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
+            passwordValidationLabel.setText("Password must contain the following:\n" +
+                    "  *A lower case letter must occur at least once\n" +
+                    "  *An upper case letter must occur at least once\n" +
+                    "  *A special character must occur at least once\n" +
+                    "  *No whitespace allowed in the entire string\n" +
+                    "  *At least 8 characters");
+            return;
+        }
+
         System.out.println("You clicked SIGNIN btn");
         System.out.println("Username signup is "+usernameField.getText());
         System.out.println("Password signup is "+passwordField.getText());
@@ -73,9 +90,8 @@ public class LoginPage implements Initializable {
             loginAlertLabel.setTextFill(Color.WHITE);
             loginAlertLabel.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
         }
-
-
     }
+
 
     private boolean isValidUserLogIn() throws NoSuchProviderException, NoSuchAlgorithmException {
 
