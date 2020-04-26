@@ -3,8 +3,9 @@
 ## The steps required to run this application are
 
 1. Select JDK 11(preferably) in project structure
-1. Download and javafx 11
-1. Run project by right clicking Main.java file and clicking Run
+1. Install javafx 11
+1. Run project by right clicking src/Main.java file and clicking Run
+1. To run tests right click src/Tests/EncryptDecryptTest.java and click Run
 
 #### If encountering Project configuration problems:
 1. Set up project configuration(if there is a problem)
