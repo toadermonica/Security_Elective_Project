@@ -8,10 +8,16 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -32,6 +38,9 @@ public class LoginPage implements Initializable {
     private TextField passwordField;
     @FXML
     private TextField usernameField;
+    @FXML
+    private Label loginAlertLabel;
+
 
     public void logInBtnAction(ActionEvent actionEvent) throws IOException, NoSuchProviderException, NoSuchAlgorithmException {
         Parent homePageRoot = FXMLLoader.load(getClass().getClassLoader().getResource("Views/HomePage.fxml"));
@@ -39,6 +48,11 @@ public class LoginPage implements Initializable {
         if (isValidUserLogIn())
         {
             scene.setRoot(homePageRoot);
+        }
+        else {
+            loginAlertLabel.setText("Your username or password is incorrect.");
+            loginAlertLabel.setTextFill(Color.WHITE);
+            loginAlertLabel.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
         }
     }
 
@@ -50,7 +64,18 @@ public class LoginPage implements Initializable {
         System.out.println("Password signup is "+password);
         //Once the user is signed up, generate the necessary  keys for user to have an easy time from here.
         //this means we need the username and the keys to be saved in UserRSAKeyFile - need to write to jsonfile
-        System.out.println("Signing up new user status is: "+ userSignUpStatus(username, password));
+        try{
+//            System.out.println("Signing up new user status is: "+ userSignUpStatus(username, password));
+            userSignUpStatus(username, password);
+            loginAlertLabel.setText("You have successfully created an account, now you can login.");
+            loginAlertLabel.setTextFill(Color.WHITE);
+            loginAlertLabel.setBackground(new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, Insets.EMPTY)));
+        }catch (Exception e){
+            loginAlertLabel.setText("This username is already taken.");
+            loginAlertLabel.setTextFill(Color.WHITE);
+            loginAlertLabel.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
+        }
+
 
     }
 
@@ -80,6 +105,9 @@ public class LoginPage implements Initializable {
         String newUserSignUp = UserAuthentication.CreateNewUser(username, password);
         if(newUserSignUp != null){
             return newUserSignUp;
+        }
+        else{
+            System.out.println(32489984);
         }
         return "Success";
     }

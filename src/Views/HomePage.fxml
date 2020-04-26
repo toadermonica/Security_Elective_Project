@@ -19,6 +19,7 @@
                                 <Insets bottom="5.0" left="5.0" top="5.0" />
                             </padding>
                         </Label>
+                  <Button fx:id="logoutBtn" mnemonicParsing="false" onAction="#logoutBtnAction" text="Logout" />
                     </children></HBox>
             </top>
             <bottom>
@@ -91,6 +92,9 @@
                                     <Font size="13.0" />
                                  </font>
                               </Label>
+                              <TextArea fx:id="decryptedText" layoutX="258.0" layoutY="146.0" prefHeight="96.0" prefWidth="324.0" />
+                              <Label layoutX="262.0" layoutY="126.0" text="Decrypted contents will appear bellow:" />
+                              <Label fx:id="decryptAlertLabel" layoutX="262.0" layoutY="246.0" prefHeight="17.0" prefWidth="323.0" />
                            </children></AnchorPane>
                   </content>
                 </Tab>

@@ -98,6 +98,7 @@ public class UserAuthentication {
         }else{
             signUpStatus[0] = 0;
             signUpStatus[1] = "We are sorry, but you already have an account! Try logging in. ";
+            return null;
         }
         return signUpStatus;
     }
