@@ -128,7 +128,7 @@ public class EncryptDecrypt {
 //        fileUtils.write(s + "/src/assets/"  + mainName + ".decrypted." + ivString + "." + "aes", output);
         return new String(output);
     }
-    public String CopyDecryptCristi(String fileName, String secretkeyInput) throws Exception{
+    public String decryptSignature(String fileName, String secretkeyInput) throws Exception{
         System.out.println("Cristi's file name looks like this: "+fileName);
         System.out.println("secretkeyInput : "+secretkeyInput);
 

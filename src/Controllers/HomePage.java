@@ -17,18 +17,9 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.util.encoders.Hex;
 
-import javax.crypto.Cipher;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.security.SecureRandom;
-import java.security.Security;
 import java.util.ResourceBundle;
 import Models.UserFiles;
 import javafx.collections.FXCollections;
@@ -215,7 +206,7 @@ public class HomePage implements Initializable {
             return;
         }
         try {
-            plainText = encryptDecrypt.CopyDecryptCristi(unsignedEncryptedFileName, secretKey);
+            plainText = encryptDecrypt.decryptSignature(unsignedEncryptedFileName, secretKey);
         } catch (Exception e) {
             e.printStackTrace();
             signFileErrorLabel.setText("Having problems with file content - possible corrupt file!");

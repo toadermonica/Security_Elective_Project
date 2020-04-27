@@ -3,7 +3,6 @@ package Libraries;
 import Models.*;
 import Utils.*;
 
-import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
@@ -46,7 +45,7 @@ public class DigitalSignatures {
         }
         EncryptDecrypt encryptionAndDecryption = new EncryptDecrypt();
         try {
-            plainTextInput = encryptionAndDecryption.CopyDecryptCristi(fileName, secretKey);
+            plainTextInput = encryptionAndDecryption.decryptSignature(fileName, secretKey);
         } catch (Exception e) {
             e.printStackTrace();
             return isValidSignature;
