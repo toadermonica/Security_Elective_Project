@@ -26,6 +26,7 @@ class EncryptDecryptTest {
 
         assertEquals(output, "cat1 cat2 cat3");
     }
+
     @Test
     void checkPasswordValidation() {
         UserAuthentication ua = new UserAuthentication();
