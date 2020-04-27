@@ -3,25 +3,47 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.LoginPage">
+<Pane maxHeight="500.0" maxWidth="600.0" minHeight="500.0" minWidth="600.0" prefHeight="500.0" prefWidth="600.0" style="-fx-background-color: #cceeff;" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.LoginPage">
    <children>
-      <Button fx:id="logInBtn" contentDisplay="CENTER" defaultButton="true" layoutX="213.0" layoutY="200.0" mnemonicParsing="false" onAction="#logInBtnAction" style="-fx-background-color: #87cefa;" text="Sign In" textFill="WHITE">
+      <Button fx:id="logInBtn" contentDisplay="CENTER" defaultButton="true" layoutX="112.0" layoutY="302.0" mnemonicParsing="false" onAction="#logInBtnAction" prefHeight="33.0" prefWidth="167.0" style="-fx-background-color: #87cefa;" text="Sign In" textFill="WHITE">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
       </Button>
-      <Button fx:id="signUpBtn" layoutX="271.0" layoutY="200.0" mnemonicParsing="false" onAction="#signUpBtnAction" style="-fx-background-color: #87cefa;" text="Sign Up" textFill="WHITE">
+      <Button fx:id="signUpBtn" layoutX="304.0" layoutY="302.0" mnemonicParsing="false" onAction="#signUpBtnAction" prefHeight="33.0" prefWidth="167.0" style="-fx-background-color: #87cefa;" text="Sign Up" textFill="WHITE">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
       </Button>
-      <Label contentDisplay="CENTER" layoutX="148.0" layoutY="120.0" text="Username" />
-      <Label contentDisplay="CENTER" layoutX="148.0" layoutY="151.0" text="Password" />
-      <PasswordField fx:id="passwordField" layoutX="213.0" layoutY="147.0" promptText="passwords" />
-      <TextField fx:id="usernameField" layoutX="213.0" layoutY="116.0" promptText="username" />
-      <Label layoutX="213.0" layoutY="38.0" prefHeight="17.0" prefWidth="149.0" text="Please authenticate yourself" />
-      <Label fx:id="loginAlertLabel" layoutX="149.0" layoutY="176.0" prefHeight="17.0" prefWidth="368.0" />
-      <Label fx:id="passwordValidationLabel" layoutX="135.0" layoutY="235.0" prefHeight="127.0" prefWidth="298.0" />
+      <Label contentDisplay="CENTER" layoutX="113.0" layoutY="114.0" prefHeight="33.0" prefWidth="360.0" text="Username" textFill="#30a7e3">
+         <font>
+            <Font name="System Bold Italic" size="12.0" />
+         </font></Label>
+      <Label contentDisplay="CENTER" layoutX="113.0" layoutY="191.0" prefHeight="33.0" prefWidth="360.0" text="Password" textFill="#30a7e3">
+         <font>
+            <Font name="System Bold Italic" size="12.0" />
+         </font></Label>
+      <PasswordField fx:id="passwordField" layoutX="111.0" layoutY="228.0" prefHeight="33.0" prefWidth="360.0" promptText="passwords" style="-fx-background-color: #ffffff; -fx-border-color: #30a7e3;" />
+      <TextField fx:id="usernameField" layoutX="111.0" layoutY="150.0" prefHeight="33.0" prefWidth="360.0" promptText="username" style="-fx-background-color: #ffffff; -fx-border-color: #30a7e3;" />
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="-1.0" layoutY="47.0" prefHeight="64.0" prefWidth="600.0" text="Welcome to your file handler!" textAlignment="CENTER" textFill="#30a7e3">
+         <font>
+            <Font name="System Bold Italic" size="15.0" />
+         </font></Label>
+      <Label fx:id="loginAlertLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="111.0" layoutY="266.0" prefHeight="33.0" prefWidth="360.0" textAlignment="CENTER" textFill="#057c09" wrapText="true">
+         <font>
+            <Font name="System Italic" size="12.0" />
+         </font></Label>
+      <Label fx:id="passwordValidationLabel" layoutX="111.0" layoutY="350.0" prefHeight="133.0" prefWidth="360.0" textFill="#b90303">
+         <font>
+            <Font name="System Italic" size="12.0" />
+         </font></Label>
    </children>
 </Pane>

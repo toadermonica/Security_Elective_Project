@@ -30,6 +30,9 @@ public class DigitalSignatures {
         String plainTextInput = null;
         UserRSAKeys ursakeys = new UserRSAKeys();
         PublicKey userPublicKey = ursakeys.computeUserPublicKey(userName);
+        if(userPublicKey == null){
+            return isValidSignature;
+        }
         JsonFileHandler jfh = new JsonFileHandler();
         List<UserFiles> listOfFiles = jfh.ReadObjectsFromJsonFile_ListOfFiles();
         for(int i = 0; i< listOfFiles.size(); i++){
@@ -39,17 +42,15 @@ public class DigitalSignatures {
             }
         }
         if(byteSignature == null || secretKey == null){
-            System.out.println("Either the byteSignature"+ byteSignature +"or the secret key are null"+secretKey);
-            return false; // returning null here
+            return isValidSignature;
         }
         EncryptDecrypt encryptionAndDecryption = new EncryptDecrypt();
         try {
             plainTextInput = encryptionAndDecryption.CopyDecryptCristi(fileName, secretKey);
         } catch (Exception e) {
             e.printStackTrace();
+            return isValidSignature;
         }
-        //byte[] input = Hex.decode("a0a1a2a3a4a5a6a7a0a1a2a3a4a5a6a7a0a1a2a3a4a5a6a7a0a1a2a3a4a5a6a7"); // this here needs to be the decrypted plain text from the file.
-        //make messagedigest from that file again :)
         DigitalSignatureProcessing dsg = new DigitalSignatureProcessing();
         byte[]input = dsg.generateMessageDigest(plainTextInput);
         try {
@@ -59,6 +60,7 @@ public class DigitalSignatures {
             isValidSignature = verifier.verify(byteSignature);
         } catch (Exception e) {
             e.printStackTrace();
+            return isValidSignature;
         }
         return isValidSignature;
     }

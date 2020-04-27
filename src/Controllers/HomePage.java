@@ -39,27 +39,10 @@ import javafx.scene.control.Label;
 import java.util.List;
 
 public class HomePage implements Initializable {
-    @FXML
-    private TabPane tabPane;
-    @FXML
-    private Button encryptBtn;
-    @FXML
-    private Button decryptBtn;
-    @FXML
-    private TextArea showSecret;
-    @FXML
-    private TextArea decryptedText;
-    @FXML
-    private TextField secretkeyInput;
-    @FXML
-    private Label decryptAlertLabel;
-    @FXML
-    private Label encryptedLabel;
-    @FXML
-    private ComboBox<String> comboBoxFileSelector, comboBox_unsignedFile, comboBox_checkSignatureValidation, combobox_selectFileUser;
-    @FXML private Label selectedFileLabel;
-    @FXML private Label welcomeUserLabel;
-    @FXML private TextField secretkeyInputInputDigitalSignature;
+    @FXML private TextArea showSecret, decryptedText;
+    @FXML private TextField secretkeyInput, secretkeyInputInputDigitalSignature;
+    @FXML private ComboBox<String> comboBoxFileSelector, comboBox_unsignedFile, comboBox_checkSignatureValidation, combobox_selectFileUser;
+    @FXML private Label decryptAlertLabel, encryptedLabel, selectedFileLabel, welcomeUserLabel, signFileErrorLabel, validateSignatureSuccessLabel, validateSignatureErrorLabel, signFileMainLabel;
 
     private ObservableList<String> fileList = FXCollections.observableArrayList();
     private ObservableList<String> encryptedFileList = FXCollections.observableArrayList();
@@ -71,8 +54,6 @@ public class HomePage implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-//        SingleSelectionModel<Tab> selectionModel = tabPane.getSelectionModel();
-//        selectionModel.select(1);
         welcomeUserLabel.setText(getLoggedInUserName());
         populateAllUIFileList();
         comboBoxFileSelector.setItems(fileList);
@@ -100,19 +81,22 @@ public class HomePage implements Initializable {
         }
     }
     public void checkSignatureValidation(ActionEvent event){
-        System.out.println("checkSignatureValidation: "+comboBox_checkSignatureValidation.getValue());
-        System.out.println("Checking signature for this user: "+fileOwnerUserName);
         String signedFileName = comboBox_checkSignatureValidation.getValue();
         if(signedFileName == null || fileOwnerUserName == null){
-            //Need to post / enable a label to be retuned to the user on UI display
-            return; // so it will break the function :)
+            validateSignatureErrorLabel.setText("Please select valid file owners and file names");
+            return;
         }
         DigitalSignatureProcessing dsp = new DigitalSignatureProcessing();
         boolean signatureValidity = dsp.verifyDigitalSignature(signedFileName, fileOwnerUserName);
-        System.out.println("After verification isValidSignature is: "+signatureValidity);
+        if(signatureValidity){
+            validateSignatureErrorLabel.setText("");
+            validateSignatureSuccessLabel.setText("This file has a valid signature!");
+        }else{
+            validateSignatureSuccessLabel.setText("");
+            validateSignatureErrorLabel.setText("Something went wrong! Invalid signature!");
+        }
     }
     public void selectFileUser(ActionEvent event) {
-        System.out.println("This is the file user selected: "+combobox_selectFileUser.getValue());
         fileOwnerUserName = combobox_selectFileUser.getValue();
     }
 
@@ -190,8 +174,6 @@ public class HomePage implements Initializable {
                 decryptedText.setText(output);
             } catch (Exception e) {
                 decryptAlertLabel.setText("Please check if you have provided the correct secret key.");
-                decryptAlertLabel.setTextFill(Color.WHITE);
-                decryptAlertLabel.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
                 e.printStackTrace();
             }
         }
@@ -213,7 +195,6 @@ public class HomePage implements Initializable {
         List<User> listOfAllSystemUsers = jfh.ReadObjectsFromJsonFile_UserRSAKeyFile();
         for (int i = 0 ; i < listOfAllSystemUsers.size(); i++){
             User userObj = listOfAllSystemUsers.get(i);
-            System.out.println("This is the logged in user: "+userObj.isLoggedIn());
             if(userObj.isLoggedIn()){
                 return userObj.getUsername();
             }
@@ -221,30 +202,36 @@ public class HomePage implements Initializable {
         return null;
     }
 
-    public void addFileSignature (ActionEvent event) {
-        System.out.println(comboBox_unsignedFile.getValue());
-    }
-
     public void decryptFileDigitalSignature(ActionEvent event) {
-        //retrieve the name of the file selected in the dropdown list
-        String unsignedEncryptedFileName = comboBox_unsignedFile.getValue();
-        System.out.println("Unencrypted unsigned file name from combo box is: "+unsignedEncryptedFileName);
-        //decrypt the text in the file and grab it in plain text variable
-
         String plainText = null;
-        try {
-            plainText = encryptDecrypt.CopyDecryptCristi(unsignedEncryptedFileName, secretkeyInputInputDigitalSignature.getText());
-            System.out.println("The plain text from file to be signed is: "+plainText);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if(plainText==null){
-            //ToDO: add an error label that the user can see
+        String unsignedEncryptedFileName = comboBox_unsignedFile.getValue();
+        String secretKey = secretkeyInputInputDigitalSignature.getText();
+        if(secretKey == null || secretKey == "" || secretKey.trim().isEmpty()){
+            signFileErrorLabel.setText("Please insert a valid secret!");
             return;
         }
-        // call on the digitalsignatureprocessing class
+        if(unsignedEncryptedFileName == null){
+            signFileErrorLabel.setText("Please select a valid file!");
+            return;
+        }
+        try {
+            plainText = encryptDecrypt.CopyDecryptCristi(unsignedEncryptedFileName, secretKey);
+        } catch (Exception e) {
+            e.printStackTrace();
+            signFileErrorLabel.setText("Having problems with file content - possible corrupt file!");
+        }
+        if(plainText==null){
+            signFileErrorLabel.setText("Having problems with file content - possible corrupt file!");
+            return;
+        }
         DigitalSignatureProcessing dgs =  new DigitalSignatureProcessing();
-        dgs.processDigitalSignature(unsignedEncryptedFileName, plainText);
-
+        String [] digitalSignatureProcessMessages = dgs.processDigitalSignature(unsignedEncryptedFileName, plainText);
+        if(digitalSignatureProcessMessages[0].equals("Success")){
+            signFileMainLabel.setText(digitalSignatureProcessMessages[1]);
+            signFileErrorLabel.setText("");
+        }else{
+            signFileMainLabel.setText("");
+            signFileErrorLabel.setText(digitalSignatureProcessMessages[1]);
+        }
     }
 }

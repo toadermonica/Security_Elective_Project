@@ -12,28 +12,46 @@ import java.util.List;
 
 public class DigitalSignatureProcessing {
 
-    public boolean processDigitalSignature(String fileName, String plainText){
-        //TODO: 3. generate message digest - DONE BELOW
+    /**
+     * Main function that processes the given data and generates a signature of the given file
+     * saves the signature in the listoffiles json as a standalone object property
+     * @param fileName
+     * @param plainText
+     * @return status of updating file signature
+     */
+    public String[] processDigitalSignature(String fileName, String plainText){
+        String [] responseArray = new String[2];
+        String errorStatus = "Fail";
+        String successStatus = "Success";
         byte[]msgDigest = generateMessageDigest(plainText);
-        System.out.println("Message digest is now: "+msgDigest);
-        //TODO: 4. generate message digest - DONE BELOW
+        if (msgDigest == null){
+            responseArray[0] = errorStatus;
+            responseArray[1] = "Could not process file content!";
+            return responseArray;
+        }
         byte[]signature = encryptMessageDigestWithUserPrivateKey(msgDigest);
-        System.out.println("Signature after encrypting the msg digest with private key is now: "+signature);
-        //todo: 7. Add signiture to the fileList & Update the signature status of the file - DONE BELOW - this can be merged in step 6
-        return updateSignatureAndStatusOfFile(fileName, signature);
+        if(signature == null){
+            responseArray[0] = errorStatus;
+            responseArray[1] = "Could not encrypt the signature! Please try again!";
+            return responseArray;
+        }
+        boolean isFileListUpdatedWithSignature = updateSignatureAndStatusOfFile(fileName, signature);
+        if (!isFileListUpdatedWithSignature){
+            responseArray[0] = errorStatus;
+            responseArray[1] = "Appending the signature failed! Please repeat this process!";
+            return responseArray;
+        }
+        responseArray[0] = successStatus;
+        responseArray[1] = "Your signature was added successfully";
+        return responseArray;
     }
 
     public boolean verifyDigitalSignature(String fileName, String UserNameOrFileSender){
         System.out.println("The  fileName and the UserNameOfFileSender are: "+ fileName + " "+UserNameOrFileSender);
-        // we loop the list of users in order to get the data to compute their public key
         JsonFileHandler jfh = new JsonFileHandler();
-        // we loop and get the computed public key && validate the signature
         DigitalSignatures ds = new DigitalSignatures();
         boolean isValidSignature = ds.verifySignature(UserNameOrFileSender, fileName);
         return isValidSignature;
-        // we decrypt the digital signature with the public key
-        // we decrypt the file and make the hash of the received document's plain text
-        // we compare the hash got from the decryption with the hash got from the plain text
     }
 
     /**
@@ -48,7 +66,6 @@ public class DigitalSignatureProcessing {
         DigitalSignatures ds = new DigitalSignatures();
         byte[] signature = ds.addSignature(msgDigest, userPrivateKey);
         if(signature==null){
-            System.out.println("Something went fishy in encryptMessageDigestWithUserPrivateKey - DigitalSignatureProcessing.java");
             return null;
         }
         return signature;
@@ -63,7 +80,6 @@ public class DigitalSignatureProcessing {
        JsonFileHandler jsonFileHandler = new JsonFileHandler();
        boolean operationStatus = jsonFileHandler.UpdateSignatureToExistingEncryptedFile(unsignedFileName, signature);
        return operationStatus;
-       //return true;
    }
     /**
      * Get existing user private key from UserRSAKeyFile where user isLogIn property (see User model) is true
